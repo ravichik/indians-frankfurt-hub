@@ -1,0 +1,210 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiArrowRight, FiUsers, FiCalendar, FiBook, FiHome, FiBriefcase, FiMapPin } from 'react-icons/fi';
+
+const HomePage = () => {
+  const features = [
+    {
+      icon: FiUsers,
+      title: 'Community Forum',
+      description: 'Connect with fellow Indians, ask questions, and share experiences',
+      link: '/forum',
+      color: 'bg-blue-500'
+    },
+    {
+      icon: FiCalendar,
+      title: 'Events Calendar',
+      description: 'Discover local Indian festivals, meetups, and cultural events',
+      link: '/events',
+      color: 'bg-green-500'
+    },
+    {
+      icon: FiBook,
+      title: 'Resources Hub',
+      description: 'Essential guides for visa, housing, jobs, and settling in Frankfurt',
+      link: '/resources',
+      color: 'bg-purple-500'
+    }
+  ];
+
+  const quickResources = [
+    {
+      icon: FiHome,
+      title: 'Housing Guide',
+      description: 'Find apartments and understand rental contracts',
+      category: 'housing'
+    },
+    {
+      icon: FiBriefcase,
+      title: 'Job Board',
+      description: 'Explore job opportunities and career advice',
+      category: 'jobs'
+    },
+    {
+      icon: FiMapPin,
+      title: 'Local Services',
+      description: 'Indian groceries, restaurants, and businesses',
+      category: 'local'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative bg-gradient-to-br from-orange-500 via-white to-green-500 py-20 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.h1
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-4xl md:text-6xl font-display font-bold text-gray-900 mb-6"
+          >
+            Welcome to Indians in Frankfurt Hub
+          </motion.h1>
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto"
+          >
+            Connecting 67,000+ Indians across Frankfurt and the Rhine-Main region
+          </motion.p>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+            >
+              Join Our Community
+              <FiArrowRight className="ml-2 w-5 h-5" />
+            </Link>
+            <Link
+              to="/resources"
+              className="inline-flex items-center justify-center bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg border-2 border-primary-600"
+            >
+              Explore Resources
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="section-title">What We Offer</h2>
+            <p className="text-gray-600 text-lg">Everything you need to thrive in Frankfurt</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+                className="card group cursor-pointer"
+              >
+                <Link to={feature.link} className="block">
+                  <div className={`${feature.color} w-16 h-16 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{feature.title}</h3>
+                  <p className="text-gray-600 mb-4">{feature.description}</p>
+                  <span className="inline-flex items-center text-primary-600 font-semibold group-hover:gap-2 transition-all duration-200">
+                    Learn More
+                    <FiArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="section-title">Quick Resources</h2>
+            <p className="text-gray-600 text-lg">Essential information for settling in Frankfurt</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {quickResources.map((resource, index) => (
+              <motion.div
+                key={index}
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+              >
+                <Link to={`/resources?category=${resource.category}`}>
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-gradient-to-br from-primary-500 to-secondary-500 w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <resource.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-1 text-gray-900">{resource.title}</h3>
+                      <p className="text-gray-600 text-sm">{resource.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
+              Join Our Growing Community
+            </h2>
+            <p className="text-xl text-white/90 mb-8">
+              Join over 67,000 Indians living in Frankfurt region. Part of Germany's 200,000+ strong Indian community.
+            </p>
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg"
+            >
+              Get Started Today
+              <FiArrowRight className="ml-2 w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default HomePage;

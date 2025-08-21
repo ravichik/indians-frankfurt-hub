@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiLock, FiCheck } from 'react-icons/fi';
-import axios from 'axios';
+import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const ResetPassword = () => {
@@ -28,10 +28,7 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/reset-password`,
-        { token, password }
-      );
+      await api.post('/auth/reset-password', { token, password });
       
       toast.success('Password reset successfully!');
       setResetSuccess(true);

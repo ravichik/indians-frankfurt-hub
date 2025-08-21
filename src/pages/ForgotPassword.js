@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiArrowLeft, FiCheck } from 'react-icons/fi';
-import axios from 'axios';
+import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const ForgotPassword = () => {
@@ -20,10 +20,7 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/forgot-password`,
-        { email }
-      );
+      await api.post('/auth/forgot-password', { email });
       
       toast.success('Password reset link sent to your email!');
       setEmailSent(true);

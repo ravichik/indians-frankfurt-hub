@@ -1,6 +1,6 @@
-# Indians in Frankfurt Hub - Frontend
+# Indians in Frankfurt Hub
 
-Frontend application for the Indians in Frankfurt Hub community platform, connecting over 67,000 Indian residents through events, forums, and resources.
+React frontend application for the Indians in Frankfurt Hub community platform, connecting over 67,000 Indian residents through events, forums, and resources.
 
 > **Backend Repository**: [indians-frankfurt-hub-backend](https://github.com/ravichik/indians-frankfurt-hub-backend)
 
@@ -77,7 +77,7 @@ npm run dev
 
 The backend will run on `http://localhost:5000`
 
-### Frontend Setup
+### Setup
 
 1. Clone this repository:
 ```bash

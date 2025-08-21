@@ -3,14 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
-  const { login, googleLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -23,19 +21,6 @@ const LoginPage = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    const result = await googleLogin(credentialResponse.credential);
-    setLoading(false);
-    
-    if (result.success) {
-      navigate('/');
-    }
-  };
-
-  const handleGoogleError = () => {
-    console.error('Google login failed');
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -160,32 +145,6 @@ const LoginPage = () => {
               </>
             )}
           </button>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <div className="w-full flex justify-center">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
-                  theme="outline"
-                  size="large"
-                  text="signin_with"
-                  width="100%"
-                  logo_alignment="left"
-                />
-              </div>
-            </div>
-          </div>
         </motion.form>
       </motion.div>
     </div>

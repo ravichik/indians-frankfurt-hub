@@ -3,14 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FiMail, FiLock, FiUser, FiUserPlus } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 
 const RegisterPage = () => {
   const { register: registerForm, handleSubmit, formState: { errors }, watch } = useForm();
   const [loading, setLoading] = useState(false);
-  const { register, googleLogin } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
   const password = watch('password');
 
@@ -29,19 +27,6 @@ const RegisterPage = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    const result = await googleLogin(credentialResponse.credential);
-    setLoading(false);
-    
-    if (result.success) {
-      navigate('/');
-    }
-  };
-
-  const handleGoogleError = () => {
-    console.error('Google registration failed');
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -241,32 +226,6 @@ const RegisterPage = () => {
               </>
             )}
           </button>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or sign up with</span>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <div className="w-full flex justify-center">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
-                  theme="outline"
-                  size="large"
-                  text="signup_with"
-                  width="100%"
-                  logo_alignment="left"
-                />
-              </div>
-            </div>
-          </div>
         </motion.form>
       </motion.div>
     </div>

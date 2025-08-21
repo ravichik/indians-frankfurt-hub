@@ -1,5 +1,8 @@
 # Environment Variables for Deployment
 
+## ⚠️ CRITICAL: Vercel Does NOT Read .env Files!
+**You MUST set these variables in the Vercel Dashboard. See VERCEL_ENV_SETUP.md for detailed instructions.**
+
 ## Frontend (Vercel/Netlify/Railway)
 
 Set these environment variables in your deployment platform's dashboard:

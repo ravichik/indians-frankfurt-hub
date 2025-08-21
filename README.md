@@ -1,6 +1,8 @@
-# Indians in Frankfurt Hub
+# Indians in Frankfurt Hub - Frontend
 
-A comprehensive community platform for the Indian diaspora in Frankfurt and the Rhine-Main region, connecting over 67,000 Indian residents through events, forums, and resources.
+Frontend application for the Indians in Frankfurt Hub community platform, connecting over 67,000 Indian residents through events, forums, and resources.
+
+> **Backend Repository**: [indians-frankfurt-hub-backend](https://github.com/ravichik/indians-frankfurt-hub-backend)
 
 ## Features
 
@@ -45,9 +47,10 @@ A comprehensive community platform for the Indian diaspora in Frankfurt and the 
 
 ### Backend Setup
 
-1. Navigate to the backend directory:
+1. Clone the backend repository:
 ```bash
-cd backend
+git clone https://github.com/ravichik/indians-frankfurt-hub-backend.git
+cd indians-frankfurt-hub-backend
 ```
 
 2. Install dependencies:
@@ -76,9 +79,10 @@ The backend will run on `http://localhost:5000`
 
 ### Frontend Setup
 
-1. Navigate to the frontend directory:
+1. Clone this repository:
 ```bash
-cd frontend
+git clone https://github.com/ravichik/indians-frankfurt-hub.git
+cd indians-frankfurt-hub
 ```
 
 2. Install dependencies:

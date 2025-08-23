@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMessageSquare, FiUser, FiClock, FiEye, FiHeart, 
   FiPlus, FiSearch, FiLock, FiTrendingUp, FiBookmark,
-  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX, FiShare2
+  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX, FiShare2,
+  FiEdit2, FiShield
 } from 'react-icons/fi';
+import { RiPushpinFill, RiPushpinLine } from 'react-icons/ri';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import { formatDistanceToNow } from 'date-fns';
@@ -42,6 +44,10 @@ const ForumPage = () => {
     { id: 'housing', name: 'Housing', icon: '🏘️' },
     { id: 'marketplace', name: 'Marketplace', icon: '🛒' }
   ];
+
+  const isAdmin = user?.role === 'admin';
+  const isModerator = user?.role === 'moderator';
+  const canModerate = isAdmin || isModerator;
 
   // Fetch posts
   useEffect(() => {
@@ -88,6 +94,18 @@ const ForumPage = () => {
       } else {
         toast.error('Failed to create post. Please check your content.');
       }
+    }
+  };
+
+  // Handle pin/unpin post
+  const handlePinPost = async (e, postId, isPinned) => {
+    e.stopPropagation();
+    try {
+      await forumAPI.pinPost(postId, !isPinned);
+      toast.success(isPinned ? 'Post unpinned' : 'Post pinned');
+      fetchPosts();
+    } catch (error) {
+      toast.error('Failed to update pin status');
     }
   };
 
@@ -545,7 +563,7 @@ const ForumPage = () => {
                               }`}
                               title={post.isPinned ? 'Unpin' : 'Pin'}
                             >
-                              <FiPin className={`w-4 h-4 ${post.isPinned ? 'fill-current' : ''}`} />
+                              {post.isPinned ? <RiPushpinFill className="w-4 h-4" /> : <RiPushpinLine className="w-4 h-4" />}
                             </button>
                           )}
                           {(isAdmin || post.author?._id === user?.id || post.author?._id === user?.userId || post.author?._id === user?._id) && (

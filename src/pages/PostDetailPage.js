@@ -5,8 +5,9 @@ import {
   FiArrowLeft, FiUser, FiClock, FiEye, FiHeart, 
   FiMessageSquare, FiEdit2, FiTrash2, FiLock, 
   FiUnlock, FiShield, FiBookmark,
-  FiChevronDown, FiAlertCircle, FiPin
+  FiChevronDown, FiAlertCircle
 } from 'react-icons/fi';
+import { RiPushpinFill, RiPushpinLine } from 'react-icons/ri';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import { formatDistanceToNow, format } from 'date-fns';
@@ -224,7 +225,7 @@ const PostDetailPage = () => {
                       }`}
                       title={post.isPinned ? 'Unpin Post' : 'Pin Post'}
                     >
-                      <FiPin className={post.isPinned ? 'fill-current' : ''} />
+                      {post.isPinned ? <RiPushpinFill /> : <RiPushpinLine />}
                     </button>
                   )}
                   {canModerate && (

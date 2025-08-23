@@ -103,6 +103,10 @@ export const AuthProvider = ({ children }) => {
     toast.success('Logged out successfully');
   };
 
+  const updateProfile = (updatedUser) => {
+    setUser(prevUser => ({ ...prevUser, ...updatedUser }));
+  };
+
   const value = {
     user,
     loading,
@@ -110,6 +114,7 @@ export const AuthProvider = ({ children }) => {
     register,
     googleLogin,
     logout,
+    updateProfile,
     isAuthenticated: !!user,
   };
 

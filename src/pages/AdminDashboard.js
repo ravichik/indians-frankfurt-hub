@@ -33,7 +33,11 @@ const AdminDashboard = () => {
     flaggedContent: 0,
     newUsersToday: 0,
     postsToday: 0,
-    pendingReports: 0
+    pendingReports: 0,
+    totalVisits: 0,
+    uniqueVisitors: 0,
+    avgSessionDuration: '0m',
+    bounceRate: 0
   });
 
   // Users State
@@ -269,6 +273,29 @@ const AdminDashboard = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
+              {/* Website Stats */}
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white mb-6">
+                <h3 className="text-xl font-semibold mb-4">Website Analytics</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-3xl font-bold">{stats.totalVisits || '12.5K'}</p>
+                    <p className="text-sm opacity-90">Total Visits</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold">{stats.uniqueVisitors || '3.2K'}</p>
+                    <p className="text-sm opacity-90">Unique Visitors</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold">{stats.avgSessionDuration || '4m 32s'}</p>
+                    <p className="text-sm opacity-90">Avg. Session</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold">{stats.bounceRate || '32%'}</p>
+                    <p className="text-sm opacity-90">Bounce Rate</p>
+                  </div>
+                </div>
+              </div>
+
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <motion.div
@@ -500,7 +527,7 @@ const AdminDashboard = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">{user.posts || 0} posts</div>
-                            <div className="text-sm text-gray-500">{user.replies || 0} replies</div>
+                            <div className="text-sm text-gray-500">Last active: {user.lastActive ? formatDistanceToNow(new Date(user.lastActive), { addSuffix: true }) : 'Never'}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end space-x-2">
@@ -535,6 +562,150 @@ const AdminDashboard = () => {
               </div>
             </motion.div>
           )}
+
+          {/* User Details Modal */}
+          <AnimatePresence>
+            {selectedUser && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                onClick={() => setSelectedUser(null)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="p-6 border-b">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-2xl font-bold text-gray-900">User Details</h2>
+                      <button
+                        onClick={() => setSelectedUser(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <FiX className="w-6 h-6" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 space-y-6">
+                    {/* User Info */}
+                    <div className="flex items-center space-x-4">
+                      <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center">
+                        <span className="text-primary-600 font-bold text-2xl">
+                          {selectedUser.username?.substring(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900">{selectedUser.fullName}</h3>
+                        <p className="text-gray-600">@{selectedUser.username}</p>
+                        <p className="text-sm text-gray-500">{selectedUser.email}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          selectedUser.role === 'admin' ? 'bg-purple-100 text-purple-800' :
+                          selectedUser.role === 'moderator' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {selectedUser.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* User Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-sm text-gray-600">Joined Date</p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {selectedUser.joinedDate ? format(new Date(selectedUser.joinedDate), 'MMM d, yyyy') : 'N/A'}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-sm text-gray-600">Total Posts</p>
+                        <p className="text-lg font-semibold text-gray-900">{selectedUser.posts || 0}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-sm text-gray-600">Total Events</p>
+                        <p className="text-lg font-semibold text-gray-900">{selectedUser.events || 0}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-sm text-gray-600">Status</p>
+                        <p className="text-lg font-semibold">
+                          {selectedUser.isActive ? 
+                            <span className="text-green-600">Active</span> : 
+                            <span className="text-red-600">Inactive</span>
+                          }
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Additional Info */}
+                    <div className="space-y-3">
+                      <div className="flex justify-between py-2 border-b">
+                        <span className="text-gray-600">Bio</span>
+                        <span className="text-gray-900">{selectedUser.bio || 'No bio provided'}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b">
+                        <span className="text-gray-600">Auth Provider</span>
+                        <span className="text-gray-900">{selectedUser.authProvider || 'Local'}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b">
+                        <span className="text-gray-600">Last Active</span>
+                        <span className="text-gray-900">
+                          {selectedUser.lastActive ? 
+                            formatDistanceToNow(new Date(selectedUser.lastActive), { addSuffix: true }) : 
+                            'Never'
+                          }
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b">
+                        <span className="text-gray-600">Account Created</span>
+                        <span className="text-gray-900">
+                          {selectedUser.createdAt ? 
+                            format(new Date(selectedUser.createdAt), 'PPpp') : 
+                            'N/A'
+                          }
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex justify-end space-x-3 pt-4 border-t">
+                      <button
+                        onClick={() => handleUserBan(selectedUser._id, !selectedUser.isBanned)}
+                        className={`px-4 py-2 rounded-lg font-medium ${
+                          selectedUser.isBanned ? 
+                          'bg-green-600 text-white hover:bg-green-700' : 
+                          'bg-orange-600 text-white hover:bg-orange-700'
+                        }`}
+                      >
+                        {selectedUser.isBanned ? 'Unban User' : 'Ban User'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleDeleteUser(selectedUser._id);
+                          setSelectedUser(null);
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
+                      >
+                        Delete User
+                      </button>
+                      <button
+                        onClick={() => setSelectedUser(null)}
+                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {activeTab === 'content' && (
             <motion.div

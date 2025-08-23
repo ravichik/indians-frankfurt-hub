@@ -56,7 +56,7 @@ export const userAPI = {
   getUserStats: (userId) => api.get(`/users/${userId}/stats`),
   getUserPosts: (userId) => api.get(`/users/${userId}/posts`),
   getUserEvents: (userId) => api.get(`/users/${userId}/events`),
-  updateProfile: (userId, data) => api.patch(`/users/${userId}`, data),
+  updateProfile: (userId, data) => api.patch(`/users/${userId}/profile`, data),
 };
 
 export const adminAPI = {

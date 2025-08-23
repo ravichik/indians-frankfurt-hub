@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiCalendar, FiShield, FiMessageSquare, FiThumbsUp, FiRefreshCw } from 'react-icons/fi';
+import { FiUser, FiMail, FiCalendar, FiShield, FiMessageSquare, FiThumbsUp, FiRefreshCw, FiEdit2, FiSave, FiX } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { userAPI } from '../services/api';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [stats, setStats] = useState({
     posts: 0,
     replies: 0,
@@ -16,10 +16,21 @@ const ProfilePage = () => {
     connections: 0
   });
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    fullName: '',
+    username: '',
+    bio: ''
+  });
 
   useEffect(() => {
     if (user?.id || user?.userId) {
       fetchUserStats();
+      setEditForm({
+        fullName: user.fullName || '',
+        username: user.username || '',
+        bio: user.bio || ''
+      });
     }
   }, [user]);
 
@@ -66,6 +77,37 @@ const ProfilePage = () => {
     }
   };
 
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Cancel editing
+      setEditForm({
+        fullName: user.fullName || '',
+        username: user.username || '',
+        bio: user.bio || ''
+      });
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const userId = user.id || user.userId || user._id;
+      const response = await userAPI.updateProfile(userId, editForm);
+      
+      if (response.data) {
+        // Update the user context if updateProfile function exists
+        if (updateProfile) {
+          updateProfile(response.data);
+        }
+        toast.success('Profile updated successfully!');
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(error.response?.data?.error || 'Failed to update profile');
+    }
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -91,9 +133,62 @@ const ProfilePage = () => {
                 </div>
               </div>
               
-              <div className="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
-                <h1 className="text-2xl font-bold text-gray-900">{user.fullName}</h1>
-                <p className="text-gray-600">@{user.username}</p>
+              <div className="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left flex-1">
+                {isEditing ? (
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={editForm.fullName}
+                      onChange={(e) => setEditForm({...editForm, fullName: e.target.value})}
+                      className="text-2xl font-bold text-gray-900 border-b-2 border-primary-500 bg-transparent focus:outline-none"
+                      placeholder="Full Name"
+                    />
+                    <div className="flex items-center">
+                      <span className="text-gray-600">@</span>
+                      <input
+                        type="text"
+                        value={editForm.username}
+                        onChange={(e) => setEditForm({...editForm, username: e.target.value})}
+                        className="text-gray-600 border-b border-gray-400 bg-transparent focus:outline-none ml-1"
+                        placeholder="username"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h1 className="text-2xl font-bold text-gray-900">{user.fullName}</h1>
+                    <p className="text-gray-600">@{user.username}</p>
+                  </>
+                )}
+              </div>
+              
+              <div className="mt-4 sm:mt-0 sm:ml-auto">
+                {isEditing ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                    >
+                      <FiSave className="w-4 h-4" />
+                      Save
+                    </button>
+                    <button
+                      onClick={handleEditToggle}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    >
+                      <FiX className="w-4 h-4" />
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleEditToggle}
+                    className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-2"
+                  >
+                    <FiEdit2 className="w-4 h-4" />
+                    Edit Profile
+                  </button>
+                )}
               </div>
             </div>
 
@@ -138,13 +233,19 @@ const ProfilePage = () => {
 
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900">Bio</h2>
-                <p className="text-gray-600">
-                  {user.bio || 'No bio added yet. Edit your profile to add a bio.'}
-                </p>
-                
-                <button className="btn-primary w-full sm:w-auto">
-                  Edit Profile
-                </button>
+                {isEditing ? (
+                  <textarea
+                    value={editForm.bio}
+                    onChange={(e) => setEditForm({...editForm, bio: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    rows="4"
+                    placeholder="Tell us about yourself..."
+                  />
+                ) : (
+                  <p className="text-gray-600">
+                    {user.bio || 'No bio added yet. Edit your profile to add a bio.'}
+                  </p>
+                )}
               </div>
             </div>
           </div>

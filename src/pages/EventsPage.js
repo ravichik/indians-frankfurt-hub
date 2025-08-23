@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { FiCalendar, FiMapPin, FiUsers, FiClock, FiPlus, FiFilter, FiEdit2, FiTrash2, FiShield } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiUsers, FiClock, FiPlus, FiFilter, FiEdit2, FiTrash2, FiShield, FiGrid, FiList, FiChevronDown } from 'react-icons/fi';
 import { useQuery } from 'react-query';
 import { format } from 'date-fns';
 import { eventsAPI } from '../services/api';
@@ -13,10 +13,12 @@ import toast from 'react-hot-toast';
 const EventsPage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState('list');
+  const [viewMode, setViewMode] = useState('grid');
   const [eventType, setEventType] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [sortBy, setSortBy] = useState('date');
+  const [filterUpcoming, setFilterUpcoming] = useState(true);
   const { isAuthenticated, user } = useAuth();
 
   const eventTypes = [
@@ -38,6 +40,32 @@ const EventsPage = () => {
   );
 
   const events = data?.data || [];
+
+  // Filter and sort events
+  const processedEvents = useMemo(() => {
+    let filtered = events;
+
+    // Filter upcoming events
+    if (filterUpcoming) {
+      filtered = filtered.filter(event => new Date(event.startDate) >= new Date());
+    }
+
+    // Sort events
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date':
+          return new Date(a.startDate) - new Date(b.startDate);
+        case 'popularity':
+          return (b.attendees?.length || 0) - (a.attendees?.length || 0);
+        case 'title':
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [events, sortBy, filterUpcoming]);
 
   const handleRSVP = async (eventId, status) => {
     if (!isAuthenticated) {
@@ -88,9 +116,65 @@ const EventsPage = () => {
             Events Calendar
           </h1>
           <p className="text-gray-600 text-lg">
-            Join 250+ annual events organized by 40+ Indian associations across Frankfurt and Rhine-Main region.
+            Discover and join exciting community events, festivals, and meetups.
           </p>
         </motion.div>
+
+        {/* Toolbar */}
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setFilterUpcoming(!filterUpcoming)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  filterUpcoming 
+                    ? 'bg-primary-600 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {filterUpcoming ? 'Upcoming Events' : 'All Events'}
+              </button>
+              
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="appearance-none px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="date">Sort by Date</option>
+                  <option value="popularity">Sort by Popularity</option>
+                  <option value="title">Sort by Title</option>
+                </select>
+                <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-lg transition-colors ${
+                  viewMode === 'grid' 
+                    ? 'bg-primary-100 text-primary-600' 
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+                title="Grid View"
+              >
+                <FiGrid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-lg transition-colors ${
+                  viewMode === 'list' 
+                    ? 'bg-primary-100 text-primary-600' 
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+                title="List View"
+              >
+                <FiList className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           <motion.aside
@@ -111,7 +195,7 @@ const EventsPage = () => {
                 onClickDay={(date) => {
                   setSelectedDate(date);
                   // Find events on this date
-                  const dateEvents = events.filter(event => 
+                  const dateEvents = processedEvents.filter(event => 
                     format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
                   );
                   if (dateEvents.length > 0) {
@@ -130,13 +214,13 @@ const EventsPage = () => {
                   }
                 }}
                 tileClassName={({ date }) => {
-                  const hasEvent = events.some(event => 
+                  const hasEvent = processedEvents.some(event => 
                     format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
                   );
                   return hasEvent ? 'bg-primary-100 text-primary-700 font-semibold cursor-pointer hover:bg-primary-200' : '';
                 }}
                 tileDisabled={({ date }) => {
-                  const hasEvent = events.some(event => 
+                  const hasEvent = processedEvents.some(event => 
                     format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
                   );
                   return !hasEvent;
@@ -215,7 +299,7 @@ const EventsPage = () => {
               <div className="text-center py-12">
                 <p className="text-red-600">Error loading events. Please try again.</p>
               </div>
-            ) : events.length === 0 ? (
+            ) : processedEvents.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -239,7 +323,7 @@ const EventsPage = () => {
                 transition={{ delay: 0.3, duration: 0.5 }}
                 className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'space-y-4'}
               >
-                {events.map((event, index) => (
+                {processedEvents.map((event, index) => (
                   <motion.article
                     key={event._id}
                     id={`event-${event._id}`}

@@ -347,7 +347,7 @@ const ResourcesPageNew = () => {
             <h2 className="text-2xl font-bold mb-4">Can't find what you need?</h2>
             <p className="mb-6 text-white/90 max-w-2xl mx-auto">
               Our community is here to help. Join our forum to ask questions, share experiences, 
-              and connect with 67,000+ Indians living in Frankfurt.
+              and connect with fellow Indians living in Frankfurt.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

@@ -74,7 +74,7 @@ const HomePage = () => {
             transition={{ delay: 0.4, duration: 0.5 }}
             className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto"
           >
-            Connecting 67,000+ Indians across Frankfurt and the Rhine-Main region
+            Your community platform for connecting, sharing, and thriving together
           </motion.p>
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -196,7 +196,7 @@ const HomePage = () => {
                 Join Our Growing Community
               </h2>
               <p className="text-xl text-white/90 mb-8">
-                Join over 67,000 Indians living in Frankfurt region. Part of Germany's 200,000+ strong Indian community.
+                Connect with fellow Indians in Frankfurt. Share experiences, find opportunities, and build lasting friendships.
               </p>
               <Link
                 to="/register"

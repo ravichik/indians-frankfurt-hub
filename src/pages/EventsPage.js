@@ -107,24 +107,73 @@ const EventsPage = () => {
   const canModerate = isAdmin || isModerator;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-4 md:py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="mb-4 md:mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl md:text-4xl font-display font-bold text-gray-900 mb-2 md:mb-4">
             Events Calendar
           </h1>
-          <p className="text-gray-600 text-lg">
-            Discover and join exciting community events, festivals, and meetups.
+          <p className="text-gray-600 text-sm md:text-lg">
+            Discover and join community events.
           </p>
         </motion.div>
 
-        {/* Toolbar */}
-        <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+        {/* Mobile Toolbar */}
+        <div className="md:hidden bg-white rounded-lg shadow-sm p-3 mb-4">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setFilterUpcoming(!filterUpcoming)}
+              className={`px-3 py-1.5 rounded-lg font-medium text-sm transition-colors ${
+                filterUpcoming 
+                  ? 'bg-primary-600 text-white' 
+                  : 'bg-gray-100 text-gray-700'
+              }`}
+            >
+              {filterUpcoming ? 'Upcoming' : 'All'}
+            </button>
+            
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg"
+            >
+              <option value="date">By Date</option>
+              <option value="popularity">Popular</option>
+              <option value="title">A-Z</option>
+            </select>
+            
+            <div className="flex gap-1">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 rounded ${
+                  viewMode === 'grid' 
+                    ? 'bg-primary-100 text-primary-600' 
+                    : 'text-gray-400'
+                }`}
+              >
+                <FiGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded ${
+                  viewMode === 'list' 
+                    ? 'bg-primary-100 text-primary-600' 
+                    : 'text-gray-400'
+                }`}
+              >
+                <FiList className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Desktop Toolbar */}
+        <div className="hidden md:block bg-white rounded-xl shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
               <button
@@ -179,12 +228,32 @@ const EventsPage = () => {
           </div>
         </div>
 
+        {/* Mobile Category Filter */}
+        <div className="md:hidden mb-4 -mx-4 px-4 overflow-x-auto">
+          <div className="flex gap-2 pb-2">
+            {eventTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => setEventType(type.id)}
+                className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm transition-all flex-shrink-0 flex items-center gap-1 ${
+                  eventType === type.id
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-200'
+                }`}
+              >
+                <span>{type.icon}</span>
+                <span>{type.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        
         <div className="flex flex-col lg:flex-row gap-8">
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="lg:w-80"
+            className="hidden lg:block lg:w-80"
           >
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
               <h2 className="font-semibold text-lg mb-4 flex items-center">
@@ -334,13 +403,13 @@ const EventsPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
-                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    className="bg-white rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
                   >
                     {event.imageUrl && (
                       <div className="h-48 bg-gradient-to-br from-primary-400 to-secondary-400"></div>
                     )}
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-4">
+                    <div className="p-4 md:p-6">
+                      <div className="flex items-start justify-between mb-3 md:mb-4">
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center space-x-2">
@@ -384,14 +453,14 @@ const EventsPage = () => {
                               </div>
                             )}
                           </div>
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                          <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                             {event.title}
                           </h3>
-                          <div className="text-gray-600 mb-4 line-clamp-2">
+                          <div className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 line-clamp-2">
                             {renderTextWithLinks(event.description)}
                           </div>
                           
-                          <div className="space-y-2 text-sm text-gray-600">
+                          <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-600">
                             <div className="flex items-center space-x-2">
                               <FiClock className="w-4 h-4 text-gray-400" />
                               <span>
@@ -413,27 +482,27 @@ const EventsPage = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between pt-4 border-t">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between pt-3 md:pt-4 border-t gap-3">
                         <div className="flex items-center space-x-2">
                           <img
                             src={`https://ui-avatars.com/api/?name=${event.organizer?.username}&background=random`}
                             alt={event.organizer?.username}
-                            className="w-8 h-8 rounded-full"
+                            className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                           />
-                          <span className="text-sm text-gray-600">
+                          <span className="text-xs md:text-sm text-gray-600 truncate">
                             by {event.organizer?.username}
                           </span>
                         </div>
                         <div className="flex space-x-2">
                           <button
                             onClick={() => handleRSVP(event._id, 'going')}
-                            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm"
+                            className="flex-1 md:flex-none px-3 md:px-4 py-1.5 md:py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs md:text-sm"
                           >
                             RSVP
                           </button>
                           <button 
                             onClick={() => navigate(`/events/${event._id}`)}
-                            className="px-4 py-2 text-primary-600 border border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-sm"
+                            className="flex-1 md:flex-none px-3 md:px-4 py-1.5 md:py-2 text-primary-600 border border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm"
                           >
                             Details
                           </button>
@@ -441,7 +510,7 @@ const EventsPage = () => {
                             shareData={getEventShareData(event)}
                             buttonText=""
                             showLabel={false}
-                            buttonClass="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center"
+                            buttonClass="px-2 md:px-3 py-1.5 md:py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm flex items-center"
                             dropdownPosition="bottom-right"
                           />
                         </div>
@@ -513,11 +582,11 @@ const CreateEventModal = ({ eventTypes, event, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center md:p-4 z-50">
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6"
+        initial={{ y: '100%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-white rounded-t-2xl md:rounded-xl max-w-2xl w-full max-h-[85vh] md:max-h-[90vh] overflow-y-auto p-4 md:p-6"
       >
         <h2 className="text-2xl font-bold mb-4">{isEditing ? 'Edit Event' : 'Create New Event'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

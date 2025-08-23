@@ -24,6 +24,8 @@ const ForumPage = () => {
   const [sortBy, setSortBy] = useState('recent');
   const [filterPinned, setFilterPinned] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
@@ -127,28 +129,175 @@ const ForumPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <section className="bg-gradient-to-br from-primary-600 to-secondary-600 text-white py-12 px-4 sm:px-6 lg:px-8">
+      {/* Mobile-optimized Header Section */}
+      <section className="bg-gradient-to-br from-primary-600 to-secondary-600 text-white py-6 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            <h1 className="text-2xl md:text-5xl font-display font-bold mb-2 md:mb-4">
               Community Forum
             </h1>
-            <p className="text-xl text-white/90">
-              Connect, share experiences, and get answers from the community
+            <p className="text-sm md:text-xl text-white/90">
+              Connect and share with the community
             </p>
           </motion.div>
+          
+          {/* Mobile Action Bar */}
+          <div className="flex gap-2 mt-4 md:hidden">
+            <button
+              onClick={() => setShowMobileSearch(!showMobileSearch)}
+              className="flex-1 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg text-white flex items-center justify-center gap-2"
+            >
+              <FiSearch className="w-4 h-4" />
+              Search
+            </button>
+            <button
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className="flex-1 bg-white/20 backdrop-blur-sm px-3 py-2 rounded-lg text-white flex items-center justify-center gap-2"
+            >
+              <FiFilter className="w-4 h-4" />
+              Filter
+            </button>
+            {isAuthenticated && (
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-white/30 backdrop-blur-sm px-3 py-2 rounded-lg text-white"
+              >
+                <FiPlus className="w-5 h-5" />
+              </button>
+            )}
+          </div>
         </div>
       </section>
+      
+      {/* Mobile Search Bar */}
+      <AnimatePresence>
+        {showMobileSearch && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-white border-b md:hidden overflow-hidden"
+          >
+            <div className="p-4">
+              <div className="relative">
+                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search posts..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  autoFocus
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Mobile Filters */}
+      <AnimatePresence>
+        {showMobileFilters && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-white border-b md:hidden overflow-hidden"
+          >
+            <div className="p-4 space-y-4">
+              {/* Categories */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">Category</p>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => {
+                        setSelectedCategory(category.id);
+                        setShowMobileFilters(false);
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                        selectedCategory === category.id
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-gray-100 text-gray-700'
+                      }`}
+                    >
+                      {category.icon} {category.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Sort Options */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">Sort by</p>
+                <select
+                  value={sortBy}
+                  onChange={(e) => {
+                    setSortBy(e.target.value);
+                    setShowMobileFilters(false);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                >
+                  <option value="recent">Most Recent</option>
+                  <option value="popular">Most Viewed</option>
+                  <option value="mostLiked">Most Liked</option>
+                  <option value="mostReplies">Most Replies</option>
+                </select>
+              </div>
+              
+              {/* Pinned Filter */}
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={filterPinned}
+                  onChange={(e) => {
+                    setFilterPinned(e.target.checked);
+                    setShowMobileFilters(false);
+                  }}
+                  className="rounded text-primary-600 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-700">Show pinned only</span>
+              </label>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        {/* Mobile Stats Bar */}
+        <div className="md:hidden bg-white rounded-lg shadow-sm p-3 mb-4">
+          <div className="flex justify-around text-center">
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{processedPosts.length}</p>
+              <p className="text-xs text-gray-500">Posts</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-primary-600">
+                {posts.filter(p => {
+                  const date = new Date(p.createdAt);
+                  const today = new Date();
+                  return date.toDateString() === today.toDateString();
+                }).length}
+              </p>
+              <p className="text-xs text-gray-500">Today</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">
+                {new Set(posts.map(p => p.author?._id)).size}
+              </p>
+              <p className="text-xs text-gray-500">Members</p>
+            </div>
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Sidebar - Hidden on mobile, visible on desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             {/* Create Post Button */}
             {isAuthenticated && (
               <motion.button
@@ -242,10 +391,10 @@ const ForumPage = () => {
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Toolbar */}
-            <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+          {/* Main Content - Full width on mobile */}
+          <div className="col-span-1 lg:col-span-3">
+            {/* Desktop Toolbar - Hidden on mobile */}
+            <div className="hidden md:block bg-white rounded-xl shadow-sm p-4 mb-6">
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 {/* Search Bar */}
                 <div className="flex-1 relative">
@@ -308,34 +457,53 @@ const ForumPage = () => {
                 </span>
               </div>
             </div>
+            
+            {/* Mobile Category Pills */}
+            <div className="md:hidden mb-4 -mx-4 px-4 overflow-x-auto">
+              <div className="flex gap-2 pb-2">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm transition-all flex-shrink-0 ${
+                      selectedCategory === category.id
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-white text-gray-700 border border-gray-200'
+                    }`}
+                  >
+                    {category.icon} {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Posts List */}
             {loading ? (
-              <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+              <div className="flex justify-center py-8 md:py-12">
+                <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-b-2 border-primary-600"></div>
               </div>
             ) : processedPosts.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-                <FiMessageSquare className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                <p className="text-gray-600 text-lg">No posts found</p>
+              <div className="text-center py-8 md:py-12 bg-white rounded-lg md:rounded-xl shadow-sm">
+                <FiMessageSquare className="w-12 h-12 md:w-16 md:h-16 mx-auto text-gray-300 mb-3 md:mb-4" />
+                <p className="text-gray-600 text-base md:text-lg">No posts found</p>
                 {isAuthenticated && (
                   <button
                     onClick={() => setShowCreateModal(true)}
-                    className="mt-4 text-primary-600 hover:text-primary-700 font-medium"
+                    className="mt-3 md:mt-4 text-primary-600 hover:text-primary-700 font-medium text-sm md:text-base"
                   >
                     Be the first to post
                   </button>
                 )}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {processedPosts.map((post, index) => (
                   <motion.article
                     key={post._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 cursor-pointer border border-gray-100 hover:border-primary-200 group"
+                    className="bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 md:p-6 cursor-pointer border border-gray-100 hover:border-primary-200 group"
                     onClick={() => navigate(`/forum/post/${post._id}`)}
                   >
                     <div className="flex items-start justify-between mb-3">
@@ -356,43 +524,45 @@ const ForumPage = () => {
                             {categories.find(c => c.id === post.category)?.name || post.category}
                           </span>
                         </div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1 md:mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                           {post.title}
                         </h3>
-                        <div className="text-gray-600 line-clamp-2">
+                        <div className="text-sm md:text-base text-gray-600 line-clamp-2">
                           {renderTextWithLinks(post.content)}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-                      <div className="flex items-center space-x-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-3 md:mt-4 text-xs md:text-sm text-gray-500 space-y-2 md:space-y-0">
+                      <div className="flex items-center justify-between md:justify-start md:space-x-4">
                         <div className="flex items-center space-x-1">
-                          <FiUser className="w-4 h-4" />
-                          <span>{post.author?.username || 'Anonymous'}</span>
+                          <FiUser className="w-3 h-3 md:w-4 md:h-4" />
+                          <span className="truncate max-w-[100px] md:max-w-none">{post.author?.username || 'Anonymous'}</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <FiClock className="w-4 h-4" />
+                          <FiClock className="w-3 h-3 md:w-4 md:h-4" />
                           <span>
                             {post.createdAt ? 
-                              formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }) :
+                              formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }).replace('about ', '') :
                               'Recently'
                             }
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-1">
-                          <FiEye className="w-4 h-4" />
-                          <span>{post.views || 0}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <FiMessageSquare className="w-4 h-4" />
-                          <span>{post.replies?.length || 0}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <FiHeart className="w-4 h-4" />
-                          <span>{post.likes?.length || 0}</span>
+                      <div className="flex items-center justify-between md:space-x-4">
+                        <div className="flex items-center space-x-3 md:space-x-4">
+                          <div className="flex items-center space-x-1">
+                            <FiEye className="w-3 h-3 md:w-4 md:h-4" />
+                            <span>{post.views || 0}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <FiMessageSquare className="w-3 h-3 md:w-4 md:h-4" />
+                            <span>{post.replies?.length || 0}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <FiHeart className="w-3 h-3 md:w-4 md:h-4" />
+                            <span>{post.likes?.length || 0}</span>
+                          </div>
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
                           <ShareButton 
@@ -407,12 +577,15 @@ const ForumPage = () => {
                     </div>
 
                     {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {post.tags.map((tag, idx) => (
-                          <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                      <div className="flex flex-wrap gap-1 md:gap-2 mt-2 md:mt-3">
+                        {post.tags.slice(0, 3).map((tag, idx) => (
+                          <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 md:py-1 rounded">
                             #{tag}
                           </span>
                         ))}
+                        {post.tags.length > 3 && (
+                          <span className="text-xs text-gray-500">+{post.tags.length - 3}</span>
+                        )}
                       </div>
                     )}
                   </motion.article>
@@ -422,6 +595,16 @@ const ForumPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Floating Action Button for Mobile */}
+      {isAuthenticated && (
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-all duration-200 flex items-center justify-center z-40 hover:scale-110"
+        >
+          <FiPlus className="w-6 h-6" />
+        </button>
+      )}
 
       {/* Create Post Modal */}
       <AnimatePresence>
@@ -438,11 +621,11 @@ const ForumPage = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-t-2xl md:rounded-xl max-w-3xl w-full md:max-h-[90vh] h-full md:h-auto overflow-y-auto fixed md:relative bottom-0 md:bottom-auto"
             >
               {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-                <h2 className="text-2xl font-bold flex items-center">
+              <div className="sticky top-0 bg-white border-b px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+                <h2 className="text-xl md:text-2xl font-bold flex items-center">
                   <FiMessageSquare className="mr-2 text-primary-600" />
                   Create New Post
                 </h2>
@@ -454,7 +637,7 @@ const ForumPage = () => {
                 </button>
               </div>
 
-              <form onSubmit={handleCreatePost} className="p-6 space-y-5">
+              <form onSubmit={handleCreatePost} className="p-4 md:p-6 space-y-4 md:space-y-5 pb-safe">
                 {/* Title and Category Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-1">
@@ -500,7 +683,7 @@ const ForumPage = () => {
                       value={newPost.content}
                       onChange={(e) => setNewPost({ ...newPost, content: e.target.value.slice(0, 2000) })}
                       required
-                      rows={8}
+                      rows={6}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                       placeholder="Share your thoughts, questions, or experiences...\n\nYou can format your post with line breaks for better readability."
                     />

@@ -155,11 +155,11 @@ const PostDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Back Navigation */}
         <button
           onClick={() => navigate('/forum')}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+          className="flex items-center text-gray-600 hover:text-gray-900 mb-4 md:mb-6 transition-colors text-sm md:text-base"
         >
           <FiArrowLeft className="mr-2" />
           Back to Forum
@@ -169,10 +169,10 @@ const PostDetailPage = () => {
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-lg overflow-hidden mb-8"
+          className="bg-white rounded-lg md:rounded-xl shadow-lg overflow-hidden mb-6 md:mb-8"
         >
           {/* Post Header */}
-          <div className="p-6 border-b">
+          <div className="p-4 md:p-6 border-b">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center flex-wrap gap-2 mb-3">
@@ -196,7 +196,7 @@ const PostDetailPage = () => {
                     </span>
                   ))}
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">
                   {post.title}
                 </h1>
               </div>
@@ -276,8 +276,8 @@ const PostDetailPage = () => {
           </div>
 
           {/* Post Content */}
-          <div className="p-6">
-            <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">
+          <div className="p-4 md:p-6">
+            <div className="prose prose-sm md:prose-base max-w-none text-gray-700 whitespace-pre-wrap">
               {renderTextWithLinks(post.content)}
             </div>
 
@@ -315,9 +315,9 @@ const PostDetailPage = () => {
         </motion.article>
 
         {/* Replies Section */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">
+        <div className="bg-white rounded-lg md:rounded-xl shadow-lg p-4 md:p-6">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900">
               Replies ({post.replies?.length || 0})
             </h2>
             {post.replies?.length > 0 && (

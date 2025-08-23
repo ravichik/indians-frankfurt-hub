@@ -37,4 +37,25 @@
   .gradient-bg {
     @apply bg-gradient-to-br from-primary-500 via-accent-400 to-secondary-500;
   }
+  
+  /* Mobile-specific utilities */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Prevent body scroll when modal is open on mobile */
+  .modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
 }

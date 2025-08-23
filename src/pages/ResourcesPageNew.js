@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { 
   FiBook, FiHome, FiBriefcase, FiMapPin, FiExternalLink, 
   FiFileText, FiGlobe, FiHeart, FiCreditCard, FiAlertCircle,
@@ -9,9 +10,19 @@ import {
 import { resourcesData, quickTips, importantLinks } from '../data/resourcesData';
 
 const ResourcesPageNew = () => {
+  const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState('visa');
   const [expandedResource, setExpandedResource] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Handle category from URL query parameter
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get('category');
+    if (categoryParam && resourcesData[categoryParam]) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [location.search]);
 
   const categoryIcons = {
     visa: FiFileText,
@@ -66,34 +77,6 @@ const ResourcesPageNew = () => {
             </p>
           </motion.div>
 
-          {/* Quick Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8"
-          >
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <FiUsers className="w-6 h-6 mb-2" />
-              <div className="text-2xl font-bold">67,000+</div>
-              <div className="text-sm opacity-90">Indians in Frankfurt</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <FiGlobe className="w-6 h-6 mb-2" />
-              <div className="text-2xl font-bold">40+</div>
-              <div className="text-sm opacity-90">Indian Associations</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <FiPhone className="w-6 h-6 mb-2" />
-              <div className="text-2xl font-bold">24/7</div>
-              <div className="text-sm opacity-90">Community Support</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <FiBook className="w-6 h-6 mb-2" />
-              <div className="text-2xl font-bold">100+</div>
-              <div className="text-sm opacity-90">Resources</div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -373,13 +356,6 @@ const ResourcesPageNew = () => {
               >
                 <FiUsers className="mr-2" />
                 Join Community Forum
-              </a>
-              <a
-                href="mailto:help@indiansfrankfurt.com"
-                className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-              >
-                <FiMail className="mr-2" />
-                Contact Support
               </a>
             </div>
           </div>

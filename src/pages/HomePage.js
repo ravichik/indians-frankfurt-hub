@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiArrowRight, FiUsers, FiCalendar, FiBook, FiHome, FiBriefcase, FiMapPin } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 
 const HomePage = () => {
+  const { isAuthenticated } = useAuth();
   const features = [
     {
       icon: FiUsers,
@@ -80,13 +82,15 @@ const HomePage = () => {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link
-              to="/register"
-              className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
-            >
-              Join Our Community
-              <FiArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+            {!isAuthenticated && (
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              >
+                Join Our Community
+                <FiArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            )}
             <Link
               to="/resources"
               className="inline-flex items-center justify-center bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg border-2 border-primary-600"
@@ -179,30 +183,32 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
-              Join Our Growing Community
-            </h2>
-            <p className="text-xl text-white/90 mb-8">
-              Join over 67,000 Indians living in Frankfurt region. Part of Germany's 200,000+ strong Indian community.
-            </p>
-            <Link
-              to="/register"
-              className="inline-flex items-center justify-center bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg"
+      {!isAuthenticated && (
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary-600">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
             >
-              Get Started Today
-              <FiArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
+                Join Our Growing Community
+              </h2>
+              <p className="text-xl text-white/90 mb-8">
+                Join over 67,000 Indians living in Frankfurt region. Part of Germany's 200,000+ strong Indian community.
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              >
+                Get Started Today
+                <FiArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

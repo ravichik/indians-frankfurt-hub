@@ -108,11 +108,38 @@ const EventsPage = () => {
                 onChange={setSelectedDate}
                 value={selectedDate}
                 className="rounded-lg border-0"
+                onClickDay={(date) => {
+                  setSelectedDate(date);
+                  // Find events on this date
+                  const dateEvents = events.filter(event => 
+                    format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+                  );
+                  if (dateEvents.length > 0) {
+                    // Scroll to the first event of that date
+                    const eventElement = document.getElementById(`event-${dateEvents[0]._id}`);
+                    if (eventElement) {
+                      eventElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      // Add a highlight effect
+                      eventElement.classList.add('ring-2', 'ring-primary-500', 'ring-offset-2');
+                      setTimeout(() => {
+                        eventElement.classList.remove('ring-2', 'ring-primary-500', 'ring-offset-2');
+                      }, 2000);
+                    }
+                  } else {
+                    toast.info(`No events on ${format(date, 'MMMM d, yyyy')}`);
+                  }
+                }}
                 tileClassName={({ date }) => {
                   const hasEvent = events.some(event => 
                     format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
                   );
-                  return hasEvent ? 'bg-primary-100 text-primary-700 font-semibold' : '';
+                  return hasEvent ? 'bg-primary-100 text-primary-700 font-semibold cursor-pointer hover:bg-primary-200' : '';
+                }}
+                tileDisabled={({ date }) => {
+                  const hasEvent = events.some(event => 
+                    format(new Date(event.startDate), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+                  );
+                  return !hasEvent;
                 }}
               />
             </div>
@@ -215,6 +242,7 @@ const EventsPage = () => {
                 {events.map((event, index) => (
                   <motion.article
                     key={event._id}
+                    id={`event-${event._id}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}

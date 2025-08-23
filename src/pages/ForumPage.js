@@ -4,12 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMessageSquare, FiUser, FiClock, FiEye, FiHeart, 
   FiPlus, FiSearch, FiLock, FiTrendingUp, FiBookmark,
-  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX
+  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX, FiShare2
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
+import ShareButton from '../components/ShareButton';
+import { getPostShareData } from '../utils/shareUtils';
+import { renderTextWithLinks } from '../utils/textUtils';
 
 const ForumPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -356,9 +359,9 @@ const ForumPage = () => {
                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
                           {post.title}
                         </h3>
-                        <p className="text-gray-600 line-clamp-2">
-                          {post.content}
-                        </p>
+                        <div className="text-gray-600 line-clamp-2">
+                          {renderTextWithLinks(post.content)}
+                        </div>
                       </div>
                     </div>
 
@@ -390,6 +393,15 @@ const ForumPage = () => {
                         <div className="flex items-center space-x-1">
                           <FiHeart className="w-4 h-4" />
                           <span>{post.likes?.length || 0}</span>
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <ShareButton 
+                            shareData={getPostShareData(post)}
+                            buttonText=""
+                            showLabel={false}
+                            buttonClass="p-1 hover:bg-gray-100 rounded transition-colors"
+                            dropdownPosition="bottom-right"
+                          />
                         </div>
                       </div>
                     </div>

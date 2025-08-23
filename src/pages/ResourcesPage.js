@@ -4,9 +4,12 @@ import {
   FiBook, FiHome, FiBriefcase, FiMapPin, FiExternalLink, 
   FiFileText, FiGlobe, FiHeart, FiCreditCard, FiAlertCircle,
   FiChevronRight, FiSearch, FiGrid, FiList,
-  FiPhone, FiMail, FiClock, FiUsers
+  FiPhone, FiMail, FiClock, FiUsers, FiShare2
 } from 'react-icons/fi';
 import { resourcesData, quickTips, importantLinks } from '../data/resourcesData';
+import ShareButton from '../components/ShareButton';
+import { getResourceShareData } from '../utils/shareUtils';
+import { renderTextWithLinks } from '../utils/textUtils';
 
 const ResourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('visa');
@@ -116,9 +119,9 @@ const ResourcesPage = () => {
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {resource.title}
                       </h3>
-                      <p className="text-gray-600">
-                        {resource.description}
-                      </p>
+                      <div className="text-gray-600">
+                        {renderTextWithLinks(resource.description)}
+                      </div>
                     </div>
                     <motion.div
                       animate={{ rotate: expandedResource === resource.id ? 90 : 0 }}
@@ -168,7 +171,7 @@ const ResourcesPage = () => {
                                           )}
                                         </div>
                                       ) : (
-                                        item
+                                        renderTextWithLinks(item)
                                       )}
                                     </span>
                                   </li>
@@ -184,14 +187,14 @@ const ResourcesPage = () => {
                                 ))}
                               </div>
                             ) : (
-                              <p className="text-gray-700">{value}</p>
+                              <div className="text-gray-700">{renderTextWithLinks(value)}</div>
                             )}
                           </div>
                         ))}
 
-                        {/* Add link if available */}
-                        {resource.link && (
-                          <div className="mt-4 pt-4 border-t">
+                        {/* Add link and share button if available */}
+                        <div className="mt-4 pt-4 border-t flex items-center justify-between">
+                          {resource.link && (
                             <a 
                               href={resource.link} 
                               target="_blank" 
@@ -201,8 +204,14 @@ const ResourcesPage = () => {
                               <span>Learn More</span>
                               <FiExternalLink className="w-4 h-4" />
                             </a>
-                          </div>
-                        )}
+                          )}
+                          <ShareButton 
+                            shareData={getResourceShareData(resource)}
+                            buttonText="Share"
+                            buttonClass="flex items-center space-x-2 px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                            dropdownPosition="top-right"
+                          />
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -242,8 +251,8 @@ const ResourcesPage = () => {
           >
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <FiUsers className="w-6 h-6 mb-2" />
-              <div className="text-2xl font-bold">67,000+</div>
-              <div className="text-sm opacity-90">Indians in Frankfurt</div>
+              <div className="text-2xl font-bold">Community</div>
+              <div className="text-sm opacity-90">Growing Network</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <FiGlobe className="w-6 h-6 mb-2" />

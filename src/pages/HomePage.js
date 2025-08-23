@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiArrowRight, FiUsers, FiCalendar, FiBook, FiHome, FiBriefcase, FiMapPin } from 'react-icons/fi';
+import { FiArrowRight, FiUsers, FiCalendar, FiBook, FiHome, FiBriefcase, FiMapPin, FiShare2 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import ShareButton from '../components/ShareButton';
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
@@ -97,6 +98,16 @@ const HomePage = () => {
             >
               Explore Resources
             </Link>
+            <ShareButton 
+              shareData={{
+                url: window.location.origin,
+                title: 'Indians in Frankfurt Hub',
+                text: 'Join the largest Indian community platform in Frankfurt - Connect, share experiences, and find resources!'
+              }}
+              buttonText="Share"
+              buttonClass="inline-flex items-center justify-center bg-gray-100 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              dropdownPosition="bottom-left"
+            />
           </motion.div>
         </div>
       </motion.section>

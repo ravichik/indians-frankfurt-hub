@@ -4,13 +4,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiArrowLeft, FiUser, FiClock, FiEye, FiHeart, 
   FiMessageSquare, FiEdit2, FiTrash2, FiLock, 
-  FiUnlock, FiShield, FiBookmark, FiShare2,
+  FiUnlock, FiShield, FiBookmark,
   FiChevronDown, FiAlertCircle
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import { formatDistanceToNow, format } from 'date-fns';
 import toast from 'react-hot-toast';
+import ShareButton from '../components/ShareButton';
+import { getPostShareData } from '../utils/shareUtils';
+import { renderTextWithLinks } from '../utils/textUtils';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -275,7 +278,7 @@ const PostDetailPage = () => {
           {/* Post Content */}
           <div className="p-6">
             <div className="prose max-w-none text-gray-700 whitespace-pre-wrap">
-              {post.content}
+              {renderTextWithLinks(post.content)}
             </div>
 
             {/* Interaction Buttons */}
@@ -296,10 +299,11 @@ const PostDetailPage = () => {
                   <FiBookmark />
                   <span>Save</span>
                 </button>
-                <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                  <FiShare2 />
-                  <span>Share</span>
-                </button>
+                <ShareButton 
+                  shareData={getPostShareData(post)}
+                  buttonText="Share"
+                  dropdownPosition="bottom-left"
+                />
               </div>
               {post.updatedAt !== post.createdAt && (
                 <p className="text-xs text-gray-500">
@@ -428,7 +432,9 @@ const PostDetailPage = () => {
                               </div>
                             </div>
                           ) : (
-                            <p className="text-gray-700 whitespace-pre-wrap">{reply.content}</p>
+                            <div className="text-gray-700 whitespace-pre-wrap">
+                              {renderTextWithLinks(reply.content)}
+                            </div>
                           )}
                           
                           <div className="flex items-center space-x-4 mt-2">

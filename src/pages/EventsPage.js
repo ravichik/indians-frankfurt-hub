@@ -3,12 +3,15 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { FiCalendar, FiMapPin, FiUsers, FiClock, FiPlus, FiFilter, FiEdit2, FiTrash2, FiShield, FiGrid, FiList, FiChevronDown } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiUsers, FiClock, FiPlus, FiFilter, FiEdit2, FiTrash2, FiShield, FiGrid, FiList, FiChevronDown, FiShare2 } from 'react-icons/fi';
 import { useQuery } from 'react-query';
 import { format } from 'date-fns';
 import { eventsAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import ShareButton from '../components/ShareButton';
+import { getEventShareData } from '../utils/shareUtils';
+import { renderTextWithLinks } from '../utils/textUtils';
 
 const EventsPage = () => {
   const navigate = useNavigate();
@@ -384,9 +387,9 @@ const EventsPage = () => {
                           <h3 className="text-xl font-semibold text-gray-900 mb-2">
                             {event.title}
                           </h3>
-                          <p className="text-gray-600 mb-4 line-clamp-2">
-                            {event.description}
-                          </p>
+                          <div className="text-gray-600 mb-4 line-clamp-2">
+                            {renderTextWithLinks(event.description)}
+                          </div>
                           
                           <div className="space-y-2 text-sm text-gray-600">
                             <div className="flex items-center space-x-2">
@@ -434,6 +437,13 @@ const EventsPage = () => {
                           >
                             Details
                           </button>
+                          <ShareButton 
+                            shareData={getEventShareData(event)}
+                            buttonText=""
+                            showLabel={false}
+                            buttonClass="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm flex items-center"
+                            dropdownPosition="bottom-right"
+                          />
                         </div>
                       </div>
                     </div>
@@ -552,7 +562,7 @@ const CreateEventModal = ({ eventTypes, event, onClose }) => {
               required
               rows={4}
               className="input-field"
-              placeholder="Describe your event..."
+              placeholder="Describe your event... (URLs will be automatically converted to clickable links)"
             />
           </div>
           

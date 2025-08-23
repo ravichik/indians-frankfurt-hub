@@ -14,7 +14,6 @@ import { formatDistanceToNow, format } from 'date-fns';
 import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
-import { renderTextWithLinks } from '../utils/textUtils';
 import RichTextDisplay from '../components/RichTextDisplay';
 
 const PostDetailPage = () => {

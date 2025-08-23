@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMessageSquare, FiUser, FiClock, FiEye, FiHeart, 
   FiPlus, FiSearch, FiLock, FiTrendingUp, FiBookmark,
-  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX, FiShare2,
+  FiAlertCircle, FiFilter, FiChevronDown, FiTag, FiX,
   FiEdit2, FiShield
 } from 'react-icons/fi';
 import { RiPushpinFill, RiPushpinLine } from 'react-icons/ri';
@@ -14,7 +14,6 @@ import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
-import { renderTextWithLinks } from '../utils/textUtils';
 import RichTextEditor from '../components/RichTextEditor';
 import RichTextDisplay from '../components/RichTextDisplay';
 
@@ -76,6 +75,16 @@ const ForumPage = () => {
     
     if (!isAuthenticated) {
       toast.error('Please login to create a post');
+      return;
+    }
+
+    // Strip HTML tags to check if content is empty
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newPost.content || '';
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+    
+    if (!newPost.title.trim() || !textContent.trim()) {
+      toast.error('Title and content are required');
       return;
     }
 
@@ -806,7 +815,7 @@ const ForumPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={!newPost.title.trim() || !newPost.content.trim()}
+                      disabled={!newPost.title.trim() || !newPost.content}
                       className="px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
                       <FiPlus className="mr-2" />

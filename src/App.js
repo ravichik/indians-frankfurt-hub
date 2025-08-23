@@ -8,6 +8,7 @@ import { GOOGLE_CLIENT_ID } from './config/googleAuth';
 import HomePage from './pages/HomePage';
 import ForumPage from './pages/ForumPage';
 import ForumPostView from './pages/ForumPostView';
+import PostDetailPage from './pages/PostDetailPage';
 import EventsPage from './pages/EventsPage';
 import EventDetailView from './pages/EventDetailView';
 import ResourcesPage from './pages/ResourcesPage';
@@ -29,7 +30,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/forum" element={<ForumPage />} />
-            <Route path="/forum/post/:id" element={<ForumPostView />} />
+            <Route path="/forum/post/:id" element={<PostDetailPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailView />} />
             <Route path="/resources" element={<ResourcesPage />} />

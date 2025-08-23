@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage';
 import ForumPage from './pages/ForumPage';
 import ForumPostView from './pages/ForumPostView';
 import PostDetailPage from './pages/PostDetailPage';
+import EditPostPage from './pages/EditPostPage';
 import EventsPage from './pages/EventsPage';
 import EventDetailView from './pages/EventDetailView';
 import ResourcesPage from './pages/ResourcesPage';
@@ -31,6 +32,11 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/forum" element={<ForumPage />} />
             <Route path="/forum/post/:id" element={<PostDetailPage />} />
+            <Route path="/forum/edit/:id" element={
+              <PrivateRoute>
+                <EditPostPage />
+              </PrivateRoute>
+            } />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailView />} />
             <Route path="/resources" element={<ResourcesPage />} />

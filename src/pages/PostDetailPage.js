@@ -5,7 +5,7 @@ import {
   FiArrowLeft, FiUser, FiClock, FiEye, FiHeart, 
   FiMessageSquare, FiEdit2, FiTrash2, FiLock, 
   FiUnlock, FiShield, FiBookmark,
-  FiChevronDown, FiAlertCircle
+  FiChevronDown, FiAlertCircle, FiPin
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
@@ -109,6 +109,16 @@ const PostDetailPage = () => {
     }
   };
 
+  const handlePinToggle = async () => {
+    try {
+      await forumAPI.pinPost(id, !post.isPinned);
+      toast.success(post.isPinned ? 'Post unpinned' : 'Post pinned');
+      fetchPost();
+    } catch (error) {
+      toast.error('Failed to update post pin status');
+    }
+  };
+
   const handleDeletePost = async () => {
     try {
       await forumAPI.deletePost(id);
@@ -204,6 +214,19 @@ const PostDetailPage = () => {
               {/* Action Buttons */}
               {(canModerate || isAuthor) && (
                 <div className="flex items-center space-x-2">
+                  {isAdmin && (
+                    <button
+                      onClick={handlePinToggle}
+                      className={`p-2 rounded-lg transition-colors ${
+                        post.isPinned 
+                          ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                      title={post.isPinned ? 'Unpin Post' : 'Pin Post'}
+                    >
+                      <FiPin className={post.isPinned ? 'fill-current' : ''} />
+                    </button>
+                  )}
                   {canModerate && (
                     <>
                       <button
@@ -219,7 +242,7 @@ const PostDetailPage = () => {
                       </span>
                     </>
                   )}
-                  {isAuthor && (
+                  {(isAdmin || isAuthor) && (
                     <button
                       onClick={() => navigate(`/forum/edit/${id}`)}
                       className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"

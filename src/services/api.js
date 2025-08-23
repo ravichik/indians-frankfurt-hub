@@ -35,6 +35,7 @@ export const forumAPI = {
   deleteReply: (postId, replyId) => api.delete(`/forum/posts/${postId}/reply/${replyId}`),
   likePost: (id) => api.post(`/forum/posts/${id}/like`),
   lockPost: (id, isLocked) => api.patch(`/forum/posts/${id}/lock`, { isLocked }),
+  pinPost: (id, isPinned) => api.patch(`/forum/posts/${id}/pin`, { isPinned }),
 };
 
 export const eventsAPI = {

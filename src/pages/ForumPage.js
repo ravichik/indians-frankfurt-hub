@@ -531,6 +531,42 @@ const ForumPage = () => {
                           {renderTextWithLinks(post.content)}
                         </div>
                       </div>
+                      
+                      {/* Admin/Moderator Actions */}
+                      {(isAdmin || (isModerator && !post.isPinned)) && (
+                        <div className="flex items-center space-x-1" onClick={(e) => e.stopPropagation()}>
+                          {isAdmin && (
+                            <button
+                              onClick={(e) => handlePinPost(e, post._id, post.isPinned)}
+                              className={`p-1.5 rounded transition-colors ${
+                                post.isPinned 
+                                  ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100' 
+                                  : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+                              }`}
+                              title={post.isPinned ? 'Unpin' : 'Pin'}
+                            >
+                              <FiPin className={`w-4 h-4 ${post.isPinned ? 'fill-current' : ''}`} />
+                            </button>
+                          )}
+                          {(isAdmin || post.author?._id === user?.id || post.author?._id === user?.userId || post.author?._id === user?._id) && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/forum/edit/${post._id}`);
+                              }}
+                              className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit"
+                            >
+                              <FiEdit2 className="w-4 h-4" />
+                            </button>
+                          )}
+                          {canModerate && (
+                            <span className="ml-1 text-xs text-purple-600" title={isAdmin ? 'Admin' : 'Moderator'}>
+                              <FiShield className="w-3 h-3" />
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-3 md:mt-4 text-xs md:text-sm text-gray-500 space-y-2 md:space-y-0">

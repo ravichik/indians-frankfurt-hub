@@ -5,6 +5,7 @@ import { FiArrowLeft, FiSave, FiX, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import toast from 'react-hot-toast';
+import RichTextEditor from '../components/RichTextEditor';
 
 const EditPostPage = () => {
   const { id } = useParams();
@@ -184,15 +185,14 @@ const EditPostPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Content <span className="text-red-500">*</span>
               </label>
-              <textarea
+              <RichTextEditor
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows={10}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Write your post content..."
+                height="300px"
               />
               <p className="text-xs text-gray-500 mt-1">
-                URLs will be automatically converted to clickable links
+                Use the formatting toolbar to style your content
               </p>
             </div>
 

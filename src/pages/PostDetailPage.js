@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
 import { renderTextWithLinks } from '../utils/textUtils';
+import RichTextDisplay from '../components/RichTextDisplay';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -301,8 +302,8 @@ const PostDetailPage = () => {
 
           {/* Post Content */}
           <div className="p-4 md:p-6">
-            <div className="prose prose-sm md:prose-base max-w-none text-gray-700 whitespace-pre-wrap">
-              {renderTextWithLinks(post.content)}
+            <div className="prose prose-sm md:prose-base max-w-none">
+              <RichTextDisplay content={post.content} className="text-gray-700" />
             </div>
 
             {/* Interaction Buttons */}
@@ -456,8 +457,8 @@ const PostDetailPage = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="text-gray-700 whitespace-pre-wrap">
-                              {renderTextWithLinks(reply.content)}
+                            <div className="text-gray-700">
+                              <RichTextDisplay content={reply.content} />
                             </div>
                           )}
                           

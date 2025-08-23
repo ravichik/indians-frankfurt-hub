@@ -15,6 +15,8 @@ import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
 import { renderTextWithLinks } from '../utils/textUtils';
+import RichTextEditor from '../components/RichTextEditor';
+import RichTextDisplay from '../components/RichTextDisplay';
 
 const ForumPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -546,7 +548,7 @@ const ForumPage = () => {
                           {post.title}
                         </h3>
                         <div className="text-sm md:text-base text-gray-600 line-clamp-2">
-                          {renderTextWithLinks(post.content)}
+                          <RichTextDisplay content={post.content} />
                         </div>
                       </div>
                       
@@ -730,24 +732,14 @@ const ForumPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Content * <span className="text-xs text-gray-500">({newPost.content.length}/2000)</span>
+                    Content *
                   </label>
-                  <div className="relative">
-                    <textarea
-                      value={newPost.content}
-                      onChange={(e) => setNewPost({ ...newPost, content: e.target.value.slice(0, 2000) })}
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                      placeholder="Share your thoughts, questions, or experiences...\n\nYou can format your post with line breaks for better readability."
-                    />
-                    {/* Character count indicator */}
-                    <div className={`absolute bottom-2 right-2 text-xs ${
-                      newPost.content.length > 1800 ? 'text-red-500' : 'text-gray-400'
-                    }`}>
-                      {2000 - newPost.content.length} characters remaining
-                    </div>
-                  </div>
+                  <RichTextEditor
+                    value={newPost.content}
+                    onChange={(value) => setNewPost({ ...newPost, content: value })}
+                    placeholder="Share your thoughts, questions, or experiences... Use the formatting toolbar to make text bold, italic, add lists, etc."
+                    height="250px"
+                  />
                   <div className="flex items-start space-x-2 mt-2">
                     <FiAlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
                     <p className="text-xs text-gray-600">
@@ -790,9 +782,9 @@ const ForumPage = () => {
                       <h4 className="font-semibold text-gray-900 mb-2">
                         {newPost.title || 'Your post title'}
                       </h4>
-                      <p className="text-gray-600 text-sm line-clamp-3">
-                        {newPost.content || 'Your post content will appear here...'}
-                      </p>
+                      <div className="text-gray-600 text-sm line-clamp-3">
+                        {newPost.content ? <RichTextDisplay content={newPost.content} /> : 'Your post content will appear here...'}
+                      </div>
                     </div>
                   </div>
                 )}

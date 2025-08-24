@@ -14,7 +14,8 @@ import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
-import { renderTextWithLinks } from '../utils/textUtils';
+import MarkdownEditor from '../components/MarkdownEditor';
+import MarkdownDisplay from '../components/MarkdownDisplay';
 
 const ForumPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -550,9 +551,9 @@ const ForumPage = () => {
                         <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1 md:mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                           {post.title}
                         </h3>
-                        <p className="text-sm md:text-base text-gray-600 line-clamp-2">
-                          {post.content}
-                        </p>
+                        <div className="text-sm md:text-base text-gray-600">
+                          <MarkdownDisplay content={post.content} className="line-clamp-2" truncate={true} />
+                        </div>
                       </div>
                       
                       {/* Admin/Moderator Actions */}
@@ -735,20 +736,19 @@ const ForumPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Content * <span className="text-xs text-gray-500">({newPost.content.length}/2000)</span>
+                    Content *
                   </label>
-                  <textarea
+                  <MarkdownEditor
                     value={newPost.content}
-                    onChange={(e) => setNewPost({ ...newPost, content: e.target.value.slice(0, 2000) })}
-                    required
-                    rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                    placeholder="Share your thoughts, questions, or experiences...\n\nYou can use line breaks for better readability."
+                    onChange={(value) => setNewPost({ ...newPost, content: value })}
+                    placeholder="Share your thoughts, questions, or experiences...\n\nYou can use **bold**, *italic*, [links](url), and more!"
+                    height="250px"
+                    maxLength={2000}
                   />
                   <div className="flex items-start space-x-2 mt-2">
                     <FiAlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
                     <p className="text-xs text-gray-600">
-                      Please be respectful and follow community guidelines. URLs will become clickable links.
+                      Please be respectful and follow community guidelines. Use markdown for formatting.
                     </p>
                   </div>
                 </div>
@@ -787,9 +787,9 @@ const ForumPage = () => {
                       <h4 className="font-semibold text-gray-900 mb-2">
                         {newPost.title || 'Your post title'}
                       </h4>
-                      <p className="text-gray-600 text-sm line-clamp-3 whitespace-pre-wrap">
-                        {newPost.content || 'Your post content will appear here...'}
-                      </p>
+                      <div className="text-gray-600 text-sm">
+                        <MarkdownDisplay content={newPost.content || 'Your post content will appear here...'} className="line-clamp-3" truncate={true} />
+                      </div>
                     </div>
                   </div>
                 )}

@@ -14,7 +14,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
-import { renderTextWithLinks } from '../utils/textUtils';
+import MarkdownDisplay from '../components/MarkdownDisplay';
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -301,8 +301,8 @@ const PostDetailPage = () => {
 
           {/* Post Content */}
           <div className="p-4 md:p-6">
-            <div className="prose prose-sm md:prose-base max-w-none text-gray-700 whitespace-pre-wrap">
-              {renderTextWithLinks(post.content)}
+            <div className="prose prose-sm md:prose-base max-w-none">
+              <MarkdownDisplay content={post.content} />
             </div>
 
             {/* Interaction Buttons */}
@@ -456,9 +456,9 @@ const PostDetailPage = () => {
                               </div>
                             </div>
                           ) : (
-                            <p className="text-gray-700 whitespace-pre-wrap">
-                              {renderTextWithLinks(reply.content)}
-                            </p>
+                            <div className="text-gray-700">
+                              <MarkdownDisplay content={reply.content} />
+                            </div>
                           )}
                           
                           <div className="flex items-center space-x-4 mt-2">

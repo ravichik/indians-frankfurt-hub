@@ -5,6 +5,7 @@ import { FiArrowLeft, FiSave, FiX, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import toast from 'react-hot-toast';
+import MarkdownEditor from '../components/MarkdownEditor';
 
 const EditPostPage = () => {
   const { id } = useParams();
@@ -184,16 +185,15 @@ const EditPostPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Content <span className="text-red-500">*</span>
               </label>
-              <textarea
+              <MarkdownEditor
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value.slice(0, 2000) })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                placeholder="Write your post content..."
-                rows={10}
+                onChange={(value) => setFormData({ ...formData, content: value })}
+                placeholder="Write your post content...\n\nYou can use **bold**, *italic*, [links](url), and more!"
+                height="300px"
                 maxLength={2000}
               />
               <p className="text-xs text-gray-500 mt-1">
-                {formData.content.length}/2000 characters
+                Use markdown formatting for rich text
               </p>
             </div>
 

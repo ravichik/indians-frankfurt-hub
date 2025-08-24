@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { FiEye, FiEdit, FiMaximize2, FiMinimize2, FiInfo } from 'react-icons/fi';
@@ -8,6 +8,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
   const [activeTab, setActiveTab] = useState('write');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const textareaRef = useRef(null);
 
   const markdownHelp = [
     { syntax: '**bold**', result: 'bold' },
@@ -21,18 +22,90 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
   ];
 
   const insertMarkdown = (before, after = '') => {
-    const textarea = document.getElementById('markdown-textarea');
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = value.substring(start, end);
-    const newText = value.substring(0, start) + before + selectedText + after + value.substring(end);
+    
+    // If no text is selected and we're adding paired markers (like ** for bold)
+    // insert placeholder text
+    const textToWrap = selectedText || (before === after ? 'text' : '');
+    const newText = value.substring(0, start) + before + textToWrap + after + value.substring(end);
     
     if (newText.length <= maxLength) {
       onChange(newText);
-      setTimeout(() => {
+      // Use requestAnimationFrame for better timing
+      requestAnimationFrame(() => {
         textarea.focus();
-        textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
-      }, 0);
+        // Position cursor between the markers if no text was selected
+        if (!selectedText && before === after) {
+          const cursorPos = start + before.length;
+          textarea.setSelectionRange(cursorPos, cursorPos + textToWrap.length);
+        } else {
+          // Position cursor after the inserted text
+          const cursorPos = start + before.length + textToWrap.length + after.length;
+          textarea.setSelectionRange(cursorPos, cursorPos);
+        }
+      });
+    }
+  };
+
+  const insertLinePrefix = (prefix) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    
+    // Find the start of the current line
+    let lineStart = start;
+    while (lineStart > 0 && value[lineStart - 1] !== '\n') {
+      lineStart--;
+    }
+    
+    // Check if line already has this prefix
+    const currentLine = value.substring(lineStart, value.indexOf('\n', lineStart));
+    if (currentLine.startsWith(prefix)) {
+      // Remove the prefix
+      const newText = value.substring(0, lineStart) + value.substring(lineStart + prefix.length);
+      onChange(newText);
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start - prefix.length, end - prefix.length);
+      });
+    } else {
+      // Add the prefix
+      const newText = value.substring(0, lineStart) + prefix + value.substring(lineStart);
+      onChange(newText);
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+      });
+    }
+  };
+
+  const insertLink = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.substring(start, end);
+    
+    // If text is selected, use it as link text
+    const linkText = selectedText || 'link text';
+    const newText = value.substring(0, start) + '[' + linkText + '](url)' + value.substring(end);
+    
+    if (newText.length <= maxLength) {
+      onChange(newText);
+      requestAnimationFrame(() => {
+        textarea.focus();
+        // Select the 'url' placeholder
+        const urlStart = start + linkText.length + 3; // 3 for ']('
+        textarea.setSelectionRange(urlStart, urlStart + 3); // Select 'url'
+      });
     }
   };
 
@@ -49,7 +122,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
           break;
         case 'k':
           e.preventDefault();
-          insertMarkdown('[', '](url)');
+          insertLink();
           break;
         default:
           break;
@@ -101,7 +174,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               <button
                 type="button"
                 className="toolbar-btn"
-                onClick={() => insertMarkdown('## ', '')}
+                onClick={() => insertLinePrefix('## ')}
                 title="Heading"
               >
                 H
@@ -109,7 +182,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               <button
                 type="button"
                 className="toolbar-btn"
-                onClick={() => insertMarkdown('- ', '')}
+                onClick={() => insertLinePrefix('- ')}
                 title="Bullet List"
               >
                 •
@@ -117,7 +190,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               <button
                 type="button"
                 className="toolbar-btn"
-                onClick={() => insertMarkdown('1. ', '')}
+                onClick={() => insertLinePrefix('1. ')}
                 title="Numbered List"
               >
                 1.
@@ -125,7 +198,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               <button
                 type="button"
                 className="toolbar-btn"
-                onClick={() => insertMarkdown('> ', '')}
+                onClick={() => insertLinePrefix('> ')}
                 title="Quote"
               >
                 "
@@ -141,7 +214,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               <button
                 type="button"
                 className="toolbar-btn"
-                onClick={() => insertMarkdown('[', '](url)')}
+                onClick={() => insertLink()}
                 title="Link (Ctrl+K)"
               >
                 🔗
@@ -188,6 +261,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
         {activeTab === 'write' ? (
           <div className="markdown-write">
             <textarea
+              ref={textareaRef}
               id="markdown-textarea"
               value={value}
               onChange={(e) => onChange(e.target.value.slice(0, maxLength))}

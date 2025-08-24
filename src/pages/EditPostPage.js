@@ -5,7 +5,6 @@ import { FiArrowLeft, FiSave, FiX, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { forumAPI } from '../services/api';
 import toast from 'react-hot-toast';
-import RichTextEditor from '../components/RichTextEditor';
 
 const EditPostPage = () => {
   const { id } = useParams();
@@ -185,14 +184,16 @@ const EditPostPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Content <span className="text-red-500">*</span>
               </label>
-              <RichTextEditor
+              <textarea
                 value={formData.content}
-                onChange={(value) => setFormData({ ...formData, content: value })}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value.slice(0, 2000) })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                 placeholder="Write your post content..."
-                height="300px"
+                rows={10}
+                maxLength={2000}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Use the formatting toolbar to style your content
+                {formData.content.length}/2000 characters
               </p>
             </div>
 

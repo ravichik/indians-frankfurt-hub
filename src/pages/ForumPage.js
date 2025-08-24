@@ -14,8 +14,7 @@ import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import ShareButton from '../components/ShareButton';
 import { getPostShareData } from '../utils/shareUtils';
-import RichTextEditor from '../components/RichTextEditor';
-import RichTextDisplay from '../components/RichTextDisplay';
+import { renderTextWithLinks } from '../utils/textUtils';
 
 const ForumPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -78,12 +77,7 @@ const ForumPage = () => {
       return;
     }
 
-    // Strip HTML tags to check if content is empty
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = newPost.content || '';
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-    
-    if (!newPost.title.trim() || !textContent.trim()) {
+    if (!newPost.title.trim() || !newPost.content.trim()) {
       toast.error('Title and content are required');
       return;
     }
@@ -556,9 +550,9 @@ const ForumPage = () => {
                         <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1 md:mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                           {post.title}
                         </h3>
-                        <div className="text-sm md:text-base text-gray-600 line-clamp-2">
-                          <RichTextDisplay content={post.content} />
-                        </div>
+                        <p className="text-sm md:text-base text-gray-600 line-clamp-2">
+                          {post.content}
+                        </p>
                       </div>
                       
                       {/* Admin/Moderator Actions */}
@@ -741,18 +735,20 @@ const ForumPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Content *
+                    Content * <span className="text-xs text-gray-500">({newPost.content.length}/2000)</span>
                   </label>
-                  <RichTextEditor
+                  <textarea
                     value={newPost.content}
-                    onChange={(value) => setNewPost({ ...newPost, content: value })}
-                    placeholder="Share your thoughts, questions, or experiences... Use the formatting toolbar to make text bold, italic, add lists, etc."
-                    height="250px"
+                    onChange={(e) => setNewPost({ ...newPost, content: e.target.value.slice(0, 2000) })}
+                    required
+                    rows={8}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                    placeholder="Share your thoughts, questions, or experiences...\n\nYou can use line breaks for better readability."
                   />
                   <div className="flex items-start space-x-2 mt-2">
                     <FiAlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
                     <p className="text-xs text-gray-600">
-                      Please be respectful and follow community guidelines. Posts with inappropriate content will be moderated.
+                      Please be respectful and follow community guidelines. URLs will become clickable links.
                     </p>
                   </div>
                 </div>
@@ -791,9 +787,9 @@ const ForumPage = () => {
                       <h4 className="font-semibold text-gray-900 mb-2">
                         {newPost.title || 'Your post title'}
                       </h4>
-                      <div className="text-gray-600 text-sm line-clamp-3">
-                        {newPost.content ? <RichTextDisplay content={newPost.content} /> : 'Your post content will appear here...'}
-                      </div>
+                      <p className="text-gray-600 text-sm line-clamp-3 whitespace-pre-wrap">
+                        {newPost.content || 'Your post content will appear here...'}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -815,7 +811,7 @@ const ForumPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={!newPost.title.trim() || !newPost.content}
+                      disabled={!newPost.title.trim() || !newPost.content.trim()}
                       className="px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
                       <FiPlus className="mr-2" />

@@ -292,7 +292,7 @@ const ForumPage = () => {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Mobile Stats Bar */}
         <div className="md:hidden bg-white rounded-lg shadow-sm p-3 mb-4">
           <div className="flex justify-around text-center">
@@ -527,38 +527,42 @@ const ForumPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 md:p-6 cursor-pointer border border-gray-100 hover:border-primary-200 group"
+                    className="bg-white rounded-lg md:rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-3 sm:p-4 md:p-6 cursor-pointer border border-gray-100 hover:border-primary-200 group"
                     onClick={() => navigate(`/forum/post/${post._id}`)}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          {post.isPinned && (
-                            <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
-                              📌 Pinned
-                            </span>
-                          )}
-                          {post.isLocked && (
-                            <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
-                              <FiLock className="inline mr-1" />
-                              Locked
-                            </span>
-                          )}
-                          <span className="bg-primary-50 text-primary-700 text-xs px-2 py-1 rounded">
-                            {categories.find(c => c.id === post.category)?.name || post.category}
+                    <div className="flex flex-col w-full">
+                      {/* Tags and Category Section */}
+                      <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                        {post.isPinned && (
+                          <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                            📌 Pinned
                           </span>
-                        </div>
-                        <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1 md:mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
-                          {post.title}
-                        </h3>
-                        <div className="text-sm md:text-base text-gray-600">
-                          <MarkdownDisplay content={post.content} className="line-clamp-2" truncate={true} />
-                        </div>
+                        )}
+                        {post.isLocked && (
+                          <span className="inline-flex items-center bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                            <FiLock className="mr-1" />
+                            Locked
+                          </span>
+                        )}
+                        <span className="inline-flex items-center bg-primary-50 text-primary-700 text-xs px-2 py-1 rounded">
+                          {categories.find(c => c.id === post.category)?.name || post.category}
+                        </span>
                       </div>
                       
-                      {/* Admin/Moderator Actions */}
-                      {(isAdmin || (isModerator && !post.isPinned)) && (
-                        <div className="flex items-center space-x-1" onClick={(e) => e.stopPropagation()}>
+                      {/* Title and Content */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 pr-2">
+                          <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors break-words">
+                            {post.title}
+                          </h3>
+                          <div className="text-sm md:text-base text-gray-600">
+                            <MarkdownDisplay content={post.content} className="line-clamp-2" truncate={true} />
+                          </div>
+                        </div>
+                      
+                        {/* Admin/Moderator Actions */}
+                        {(isAdmin || (isModerator && !post.isPinned)) && (
+                          <div className="flex items-center space-x-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                           {isAdmin && (
                             <button
                               onClick={(e) => handlePinPost(e, post._id, post.isPinned)}
@@ -588,19 +592,19 @@ const ForumPage = () => {
                             <span className="ml-1 text-xs text-purple-600" title={isAdmin ? 'Admin' : 'Moderator'}>
                               <FiShield className="w-3 h-3" />
                             </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
 
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-3 md:mt-4 text-xs md:text-sm text-gray-500 space-y-2 md:space-y-0">
-                      <div className="flex items-center justify-between md:justify-start md:space-x-4">
-                        <div className="flex items-center space-x-1">
-                          <FiUser className="w-3 h-3 md:w-4 md:h-4" />
-                          <span className="truncate max-w-[100px] md:max-w-none">{post.author?.username || 'Anonymous'}</span>
+                      {/* Post Metadata */}
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <FiUser className="w-3 h-3" />
+                          <span className="truncate max-w-[100px]">{post.author?.username || 'Anonymous'}</span>
                         </div>
-                        <div className="flex items-center space-x-1">
-                          <FiClock className="w-3 h-3 md:w-4 md:h-4" />
+                        <div className="flex items-center gap-1">
+                          <FiClock className="w-3 h-3" />
                           <span>
                             {post.createdAt ? 
                               formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }).replace('about ', '') :
@@ -608,23 +612,19 @@ const ForumPage = () => {
                             }
                           </span>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-between md:space-x-4">
-                        <div className="flex items-center space-x-3 md:space-x-4">
-                          <div className="flex items-center space-x-1">
-                            <FiEye className="w-3 h-3 md:w-4 md:h-4" />
-                            <span>{post.views || 0}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <FiMessageSquare className="w-3 h-3 md:w-4 md:h-4" />
-                            <span>{post.replies?.length || 0}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <FiHeart className="w-3 h-3 md:w-4 md:h-4" />
-                            <span>{post.likes?.length || 0}</span>
-                          </div>
+                        <div className="flex items-center gap-1">
+                          <FiEye className="w-3 h-3" />
+                          <span>{post.views || 0}</span>
                         </div>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-1">
+                          <FiMessageSquare className="w-3 h-3" />
+                          <span>{post.replies?.length || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <FiHeart className="w-3 h-3" />
+                          <span>{post.likes?.length || 0}</span>
+                        </div>
+                        <div className="ml-auto" onClick={(e) => e.stopPropagation()}>
                           <ShareButton 
                             shareData={getPostShareData(post)}
                             buttonText=""
@@ -634,20 +634,20 @@ const ForumPage = () => {
                           />
                         </div>
                       </div>
-                    </div>
 
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 md:gap-2 mt-2 md:mt-3">
-                        {post.tags.slice(0, 3).map((tag, idx) => (
-                          <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 md:py-1 rounded">
-                            #{tag}
-                          </span>
-                        ))}
-                        {post.tags.length > 3 && (
-                          <span className="text-xs text-gray-500">+{post.tags.length - 3}</span>
-                        )}
-                      </div>
-                    )}
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {post.tags.slice(0, 4).map((tag, idx) => (
+                            <span key={idx} className="inline-flex items-center text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                              #{tag}
+                            </span>
+                          ))}
+                          {post.tags.length > 4 && (
+                            <span className="inline-flex items-center text-xs text-gray-500 px-1">+{post.tags.length - 4}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </motion.article>
                 ))}
               </div>

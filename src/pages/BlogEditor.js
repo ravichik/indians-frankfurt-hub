@@ -265,12 +265,8 @@ const BlogEditor = () => {
                     onChange={handleInputChange}
                     rows="3"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    placeholder="Brief description of the post (max 300 characters)"
-                    maxLength="300"
+                    placeholder="Brief description of the post"
                   />
-                  <p className="text-sm text-gray-500 mt-1">
-                    {formData.excerpt.length}/300 characters
-                  </p>
                 </div>
 
                 <div>
@@ -411,12 +407,8 @@ const BlogEditor = () => {
                     value={formData.seoTitle}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    placeholder="SEO optimized title (max 60 characters)"
-                    maxLength="60"
+                    placeholder="SEO optimized title"
                   />
-                  <p className="text-sm text-gray-500 mt-1">
-                    {formData.seoTitle.length}/60 characters
-                  </p>
                 </div>
 
                 <div>
@@ -429,12 +421,8 @@ const BlogEditor = () => {
                     onChange={handleInputChange}
                     rows="3"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    placeholder="SEO meta description (max 160 characters)"
-                    maxLength="160"
+                    placeholder="SEO meta description"
                   />
-                  <p className="text-sm text-gray-500 mt-1">
-                    {formData.seoDescription.length}/160 characters
-                  </p>
                 </div>
 
                 <div>

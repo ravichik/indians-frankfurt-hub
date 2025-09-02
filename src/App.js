@@ -22,6 +22,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import BlogPage from './pages/BlogPage';
+import BlogPostView from './pages/BlogPostView';
+import BlogEditor from './pages/BlogEditor';
 
 function App() {
   return (
@@ -43,6 +46,18 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailView />} />
             <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostView />} />
+            <Route path="/admin/blog/new" element={
+              <PrivateRoute>
+                <BlogEditor />
+              </PrivateRoute>
+            } />
+            <Route path="/admin/blog/edit/:id" element={
+              <PrivateRoute>
+                <BlogEditor />
+              </PrivateRoute>
+            } />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

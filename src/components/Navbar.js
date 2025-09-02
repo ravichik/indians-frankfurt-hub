@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiMenu, FiX, FiHome, FiMessageSquare, FiCalendar, FiBook, FiUser, FiLogOut, FiSettings } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiMessageSquare, FiCalendar, FiBook, FiUser, FiLogOut, FiSettings, FiBookOpen } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
@@ -18,6 +18,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: FiHome },
     { path: '/forum', label: 'Forum', icon: FiMessageSquare },
     { path: '/events', label: 'Events', icon: FiCalendar },
+    { path: '/blog', label: 'Blog', icon: FiBookOpen },
     { path: '/resources', label: 'Resources', icon: FiBook },
   ];
 

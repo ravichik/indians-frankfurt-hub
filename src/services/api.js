@@ -92,4 +92,25 @@ export const adminAPI = {
   exportData: (type) => api.get(`/admin/export/${type}`, { responseType: 'blob' })
 };
 
+export const blogAPI = {
+  // Public endpoints
+  getPosts: (params) => api.get('/blog/posts', { params }),
+  getPostBySlug: (slug) => api.get(`/blog/posts/${slug}`),
+  getRelatedPosts: (slug) => api.get(`/blog/posts/${slug}/related`),
+  
+  // Admin endpoints
+  getPost: (id) => api.get(`/blog/admin/posts/${id}`),
+  createPost: (data) => api.post('/blog/posts', data),
+  updatePost: (id, data) => api.put(`/blog/posts/${id}`, data),
+  deletePost: (id) => api.delete(`/blog/posts/${id}`),
+  
+  // User interactions
+  likePost: (id) => api.post(`/blog/posts/${id}/like`),
+  addComment: (id, data) => api.post(`/blog/posts/${id}/comments`, data),
+  
+  // Admin stats
+  getBlogStats: () => api.get('/blog/admin/stats'),
+  getAdminPosts: () => api.get('/blog/admin/posts')
+};
+
 export default api;

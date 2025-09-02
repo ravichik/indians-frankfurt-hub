@@ -200,6 +200,11 @@ export const generatePageSEO = (pageName) => {
       title: 'Housing Guide for Indians in Frankfurt',
       description: 'Complete guide to finding accommodation in Frankfurt for Indian expats. Tips on renting, areas to live, and housing search.',
       keywords: 'Frankfurt housing Indians, Indian accommodation Frankfurt, expat housing Germany'
+    },
+    blog: {
+      title: 'Blog - Frankfurt Indians',
+      description: 'Read the latest articles, stories, and insights from the Indian community in Frankfurt. Culture, lifestyle, career tips, and expat experiences.',
+      keywords: 'Indian blog Frankfurt, Indian expat stories, Frankfurt Indian articles, Indian community blog Germany'
     }
   };
 

@@ -8,6 +8,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { blogAPI } from '../services/api';
 import MarkdownEditor from '../components/MarkdownEditor';
+import BlogMarkdownGuide from '../components/BlogMarkdownGuide';
+import MarkdownDisplay from '../components/MarkdownDisplay';
 import toast from 'react-hot-toast';
 
 const BlogEditor = () => {
@@ -270,9 +272,12 @@ const BlogEditor = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Content *
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Content *
+                    </label>
+                    <BlogMarkdownGuide />
+                  </div>
                   <MarkdownEditor
                     value={formData.content}
                     onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
@@ -447,18 +452,16 @@ const BlogEditor = () => {
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Preview</h2>
               <article className="prose prose-lg max-w-none">
-                <h1>{formData.title || 'Untitled Post'}</h1>
+                <h1 className="text-3xl font-bold mb-4">{formData.title || 'Untitled Post'}</h1>
                 {formData.featuredImage && (
                   <img
                     src={formData.featuredImage}
                     alt={formData.title}
-                    className="w-full rounded-lg"
+                    className="w-full rounded-lg mb-6"
                   />
                 )}
-                <p className="text-gray-600">{formData.excerpt}</p>
-                <div dangerouslySetInnerHTML={{ 
-                  __html: formData.content.replace(/\n/g, '<br />') 
-                }} />
+                <p className="text-gray-600 text-lg mb-6 italic">{formData.excerpt}</p>
+                <MarkdownDisplay content={formData.content} className="blog-content" />
               </article>
             </div>
           )}

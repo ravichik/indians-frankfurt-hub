@@ -1,0 +1,330 @@
+/* Enhanced Blog Post Styles for Beautiful Rendering */
+
+.blog-content {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #1a202c;
+  max-width: 100%;
+}
+
+/* Headers with better spacing and visual hierarchy */
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #0f172a;
+}
+
+.blog-content h1 {
+  font-size: 2.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.blog-content h2 {
+  font-size: 2rem;
+  margin-top: 3rem;
+}
+
+.blog-content h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+}
+
+.blog-content h4 {
+  font-size: 1.25rem;
+  color: #334155;
+}
+
+.blog-content h5 {
+  font-size: 1.125rem;
+  color: #475569;
+}
+
+.blog-content h6 {
+  font-size: 1rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* First header doesn't need top margin */
+.blog-content h1:first-child,
+.blog-content h2:first-child,
+.blog-content h3:first-child {
+  margin-top: 0;
+}
+
+/* Paragraphs with better readability */
+.blog-content p {
+  margin: 1.5rem 0;
+  font-weight: 400;
+}
+
+.blog-content p:first-child {
+  margin-top: 0;
+}
+
+.blog-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Lead paragraph style */
+.blog-content > p:first-of-type {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: #475569;
+  font-weight: 400;
+}
+
+/* Lists with better spacing */
+.blog-content ul,
+.blog-content ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+}
+
+.blog-content li {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+.blog-content ul li {
+  list-style-type: disc;
+}
+
+.blog-content ol li {
+  list-style-type: decimal;
+}
+
+.blog-content li > ul,
+.blog-content li > ol {
+  margin: 0.5rem 0;
+}
+
+/* Beautiful blockquotes */
+.blog-content blockquote {
+  border-left: 4px solid #6366f1;
+  background: linear-gradient(to right, #f0f9ff, transparent);
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: #475569;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.blog-content blockquote p {
+  margin: 0;
+}
+
+.blog-content blockquote p:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+/* Code blocks with syntax highlighting feel */
+.blog-content pre,
+.blog-content .code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Inline code */
+.blog-content code,
+.blog-content .inline-code {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.875em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.blog-content pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  white-space: pre;
+  font-weight: normal;
+}
+
+/* Links with nice hover effect */
+.blog-content a {
+  color: #6366f1;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.blog-content a:hover {
+  color: #4f46e5;
+  border-bottom-color: #6366f1;
+}
+
+/* Text formatting */
+.blog-content strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.blog-content em {
+  font-style: italic;
+  color: #334155;
+}
+
+.blog-content del {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+/* Horizontal rules */
+.blog-content hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+  margin: 3rem 0;
+}
+
+/* Tables with modern styling */
+.blog-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 2rem 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.blog-content th,
+.blog-content td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.blog-content th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #0f172a;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+}
+
+.blog-content tr:hover {
+  background: #f8fafc;
+}
+
+.blog-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* Images with nice styling */
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 2rem auto;
+  display: block;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Image captions */
+.blog-content img + em {
+  display: block;
+  text-align: center;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Task lists */
+.blog-content input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2);
+}
+
+/* Keyboard keys */
+.blog-content kbd {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Highlighted text */
+.blog-content mark {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.125rem;
+}
+
+/* Footnotes */
+.blog-content .footnotes {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.blog-content .footnotes ol {
+  padding-left: 1.5rem;
+}
+
+.blog-content .footnote-ref {
+  font-size: 0.75rem;
+  vertical-align: super;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .blog-content {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  
+  .blog-content h1 { font-size: 2rem; }
+  .blog-content h2 { font-size: 1.5rem; }
+  .blog-content h3 { font-size: 1.25rem; }
+  .blog-content h4 { font-size: 1.125rem; }
+  
+  .blog-content blockquote {
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  
+  .blog-content pre,
+  .blog-content .code-block {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .blog-content table {
+    font-size: 0.875rem;
+  }
+}

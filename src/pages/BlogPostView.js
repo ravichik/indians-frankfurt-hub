@@ -13,6 +13,7 @@ import EnhancedSEO from '../components/EnhancedSEO';
 import MarkdownDisplay from '../components/MarkdownDisplay';
 import ShareButton from '../components/ShareButton';
 import toast from 'react-hot-toast';
+import '../components/BlogPostStyles.css';
 
 const BlogPostView = () => {
   const { slug } = useParams();
@@ -272,9 +273,9 @@ const BlogPostView = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="prose prose-lg max-w-none mb-12"
+          className="mb-12"
         >
-          <MarkdownDisplay content={post.content} />
+          <MarkdownDisplay content={post.content} className="blog-content" />
         </motion.div>
 
         {/* Tags */}

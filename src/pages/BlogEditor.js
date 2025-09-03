@@ -7,9 +7,7 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { blogAPI } from '../services/api';
-import MarkdownEditor from '../components/MarkdownEditor';
-import BlogMarkdownGuide from '../components/BlogMarkdownGuide';
-import MarkdownDisplay from '../components/MarkdownDisplay';
+import RichTextEditor from '../components/RichTextEditor';
 import toast from 'react-hot-toast';
 
 const BlogEditor = () => {
@@ -272,16 +270,14 @@ const BlogEditor = () => {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Content *
-                    </label>
-                    <BlogMarkdownGuide />
-                  </div>
-                  <MarkdownEditor
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content *
+                  </label>
+                  <RichTextEditor
                     value={formData.content}
-                    onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                    onChange={(content, plainText) => setFormData(prev => ({ ...prev, content }))}
                     height="400px"
+                    placeholder="Write your blog post content here. You can paste content from Word, Google Docs, or any other source and it will preserve the formatting!"
                   />
                 </div>
               </motion.div>
@@ -461,7 +457,10 @@ const BlogEditor = () => {
                   />
                 )}
                 <p className="text-gray-600 text-lg mb-6 italic">{formData.excerpt}</p>
-                <MarkdownDisplay content={formData.content} className="blog-content" />
+                <div 
+                  className="blog-content ql-editor" 
+                  dangerouslySetInnerHTML={{ __html: formData.content }}
+                />
               </article>
             </div>
           )}

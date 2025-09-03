@@ -10,10 +10,9 @@ import { useAuth } from '../context/AuthContext';
 import { blogAPI } from '../services/api';
 import { format } from 'date-fns';
 import EnhancedSEO from '../components/EnhancedSEO';
-import MarkdownDisplay from '../components/MarkdownDisplay';
+import RichTextDisplay from '../components/RichTextDisplay';
 import ShareButton from '../components/ShareButton';
 import toast from 'react-hot-toast';
-import '../components/BlogPostStyles.css';
 
 const BlogPostView = () => {
   const { slug } = useParams();
@@ -275,7 +274,7 @@ const BlogPostView = () => {
           transition={{ delay: 0.3 }}
           className="mb-12"
         >
-          <MarkdownDisplay content={post.content} className="blog-content" />
+          <RichTextDisplay content={post.content} className="blog-content" />
         </motion.div>
 
         {/* Tags */}

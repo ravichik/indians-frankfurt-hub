@@ -130,6 +130,16 @@ const Navbar = () => {
             
             {isAuthenticated ? (
               <>
+                {user?.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center space-x-2 px-3 py-2 text-secondary-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all duration-200 font-medium"
+                  >
+                    <FiSettings className="w-4 h-4" />
+                    <span>Admin</span>
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   onClick={() => setIsOpen(false)}

@@ -762,7 +762,6 @@ const ForumPage = () => {
                     onChange={(value) => setNewPost({ ...newPost, content: value })}
                     placeholder="Share your thoughts, questions, or experiences...\n\nYou can use **bold**, *italic*, [links](url), and more!"
                     height="250px"
-                    maxLength={2000}
                   />
                   <div className="flex items-start space-x-2 mt-2">
                     <FiAlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMenu, FiX, FiHome, FiMessageSquare, FiCalendar, FiBook, FiUser, FiLogOut, FiSettings, FiBookOpen } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import Logo, { LogoMinimal } from './Logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,13 +29,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-md"
-              >
-                <span className="text-white font-bold text-xl">FI</span>
-              </motion.div>
+              <LogoMinimal size="default" animate={true} />
               <span className="font-display font-bold text-xl bg-gradient-to-r from-secondary-800 to-primary-600 bg-clip-text text-transparent">
                 Frankfurt Indians
               </span>

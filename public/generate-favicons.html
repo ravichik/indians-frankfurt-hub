@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Favicons</title>
+</head>
+<body>
+    <h1>Frankfurt Indians Favicon Generator</h1>
+    <p>Right-click and save these images with the specified filenames:</p>
+    
+    <!-- 16x16 -->
+    <h3>favicon-16x16.png</h3>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    
+    <!-- 32x32 -->
+    <h3>favicon-32x32.png</h3>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    
+    <!-- 192x192 -->
+    <h3>logo192.png</h3>
+    <canvas id="canvas192" width="192" height="192"></canvas>
+    
+    <!-- 512x512 -->
+    <h3>logo512.png</h3>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+
+    <script>
+        function drawLogo(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#FF9933');
+            gradient.addColorStop(0.5, '#FFFFFF');
+            gradient.addColorStop(1, '#138808');
+            
+            // Draw rounded rectangle background
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.15);
+            ctx.fill();
+            
+            // White circle for text
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.35, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fill();
+            
+            // Indian flag bands
+            const bandHeight = size * 0.08;
+            const bandWidth = size * 0.5;
+            const startX = (size - bandWidth) / 2;
+            const startY = size * 0.28;
+            
+            ctx.fillStyle = '#FF9933';
+            ctx.fillRect(startX, startY, bandWidth, bandHeight);
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(startX, startY + bandHeight, bandWidth, bandHeight);
+            
+            ctx.fillStyle = '#138808';
+            ctx.fillRect(startX, startY + bandHeight * 2, bandWidth, bandHeight);
+            
+            // Chakra
+            ctx.beginPath();
+            ctx.arc(size/2, size * 0.47, size * 0.08, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#000080';
+            ctx.lineWidth = size * 0.015;
+            ctx.stroke();
+            
+            // FI Text
+            ctx.fillStyle = '#1a202c';
+            ctx.font = `bold ${size * 0.18}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('FI', size/2, size * 0.75);
+        }
+
+        // Generate all sizes
+        drawLogo(document.getElementById('canvas16'), 16);
+        drawLogo(document.getElementById('canvas32'), 32);
+        drawLogo(document.getElementById('canvas192'), 192);
+        drawLogo(document.getElementById('canvas512'), 512);
+    </script>
+</body>
+</html>

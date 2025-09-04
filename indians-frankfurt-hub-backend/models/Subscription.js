@@ -29,7 +29,8 @@ const subscriptionSchema = new mongoose.Schema({
   unsubscribeToken: {
     type: String,
     unique: true,
-    sparse: true
+    sparse: true,
+    index: true
   },
   preferences: {
     frequency: {
@@ -63,6 +64,5 @@ subscriptionSchema.pre('save', function(next) {
 
 // Index for better query performance
 subscriptionSchema.index({ email: 1, isActive: 1 });
-subscriptionSchema.index({ unsubscribeToken: 1 });
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);

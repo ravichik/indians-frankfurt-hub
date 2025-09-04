@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9933;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#138808;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#bg)"/>
+  <!-- White circle background for text -->
+  <circle cx="16" cy="16" r="12" fill="white" opacity="0.9"/>
+  <!-- Indian flag bands -->
+  <rect x="8" y="9" width="16" height="4" fill="#FF9933"/>
+  <rect x="8" y="13" width="16" height="4" fill="#FFFFFF"/>
+  <rect x="8" y="17" width="16" height="4" fill="#138808"/>
+  <!-- Ashoka Chakra -->
+  <circle cx="16" cy="15" r="3" fill="none" stroke="#000080" stroke-width="0.5"/>
+  <!-- FI Text -->
+  <text x="16" y="26" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="#1a202c">FI</text>
+</svg>

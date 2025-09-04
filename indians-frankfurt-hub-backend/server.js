@@ -57,6 +57,8 @@ const usersRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 const ogImageRoutes = require('./routes/ogImage');
 const sitemapRoutes = require('./routes/sitemap');
+const blogRoutes = require('./routes/blog');
+const subscriptionRoutes = require('./routes/subscription');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/forum', forumRoutes);
@@ -65,6 +67,8 @@ app.use('/api/resources', resourcesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/og', ogImageRoutes);
+app.use('/api/blog', blogRoutes);
+app.use('/api/subscription', subscriptionRoutes);
 
 // Sitemap routes (no /api prefix for SEO)
 app.use('/', sitemapRoutes);

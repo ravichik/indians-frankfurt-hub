@@ -227,7 +227,6 @@ const EditPostPage = () => {
                 onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Write your post content...\n\nYou can use **bold**, *italic*, [links](url), and more!"
                 height="300px"
-                maxLength={2000}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Use markdown formatting for rich text

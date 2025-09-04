@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { FiEye, FiEdit, FiMaximize2, FiMinimize2, FiInfo } from 'react-icons/fi';
 import './MarkdownEditor.css';
 
-const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLength = 2000 }) => {
+const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLength }) => {
   const [activeTab, setActiveTab] = useState('write');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -34,7 +34,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
     const textToWrap = selectedText || (before === after ? 'text' : '');
     const newText = value.substring(0, start) + before + textToWrap + after + value.substring(end);
     
-    if (newText.length <= maxLength) {
+    if (!maxLength || newText.length <= maxLength) {
       onChange(newText);
       // Use requestAnimationFrame for better timing
       requestAnimationFrame(() => {
@@ -98,7 +98,7 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
     const linkText = selectedText || 'link text';
     const newText = value.substring(0, start) + '[' + linkText + '](url)' + value.substring(end);
     
-    if (newText.length <= maxLength) {
+    if (!maxLength || newText.length <= maxLength) {
       onChange(newText);
       requestAnimationFrame(() => {
         textarea.focus();
@@ -264,17 +264,19 @@ const MarkdownEditor = ({ value, onChange, placeholder, height = '300px', maxLen
               ref={textareaRef}
               id="markdown-textarea"
               value={value}
-              onChange={(e) => onChange(e.target.value.slice(0, maxLength))}
+              onChange={(e) => onChange(maxLength ? e.target.value.slice(0, maxLength) : e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={placeholder || "Write your content here...\n\nYou can use **bold**, *italic*, [links](url), and more!"}
               className="markdown-textarea"
-              maxLength={maxLength}
+              maxLength={maxLength || undefined}
             />
-            <div className="markdown-footer">
-              <span className="char-count">
-                {value.length} / {maxLength}
-              </span>
-            </div>
+            {maxLength && (
+              <div className="markdown-footer">
+                <span className="char-count">
+                  {value.length} / {maxLength}
+                </span>
+              </div>
+            )}
           </div>
         ) : (
           <div className="markdown-preview">

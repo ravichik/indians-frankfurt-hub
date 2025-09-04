@@ -158,14 +158,23 @@ export const generateProfileSEO = (user) => {
 export const generatePageSEO = (pageName) => {
   const pages = {
     home: {
-      title: 'Frankfurt Indians - Indian Community in Frankfurt',
-      description: 'Join the largest Indian community platform in Frankfurt. Connect with fellow Indians, find events, resources, jobs, and housing tips for expats in Germany.',
-      keywords: 'Frankfurt Indians, Indian community Frankfurt, Indian expats Germany, Indians in Frankfurt am Main',
+      title: 'Frankfurt Indians - #1 Indian Community Hub in Frankfurt am Main',
+      description: 'Frankfurt Indians - The official platform for 50,000+ Indians in Frankfurt. Find Indian events, restaurants, jobs, housing, visa help & connect with the largest Indian community in Frankfurt am Main, Germany.',
+      keywords: 'Frankfurt Indians, Indian community Frankfurt, Indians in Frankfurt, Indian expats Frankfurt, Frankfurt Indian events, Indian restaurants Frankfurt, Indian professionals Frankfurt, Frankfurt Indians visa, Indian networking Frankfurt, Indians Frankfurt am Main',
       structuredData: {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": ["WebSite", "Organization"],
         "name": "Frankfurt Indians",
+        "alternateName": ["Indians in Frankfurt", "Frankfurt Indian Community", "Indian Expats Frankfurt"],
         "url": "https://www.frankfurtindians.com",
+        "logo": "https://www.frankfurtindians.com/logo.png",
+        "description": "Frankfurt Indians - Official platform for Indians living in Frankfurt am Main. Connect with 50,000+ Indian expats, find events, jobs, housing, and resources.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Frankfurt am Main",
+          "addressRegion": "Hessen",
+          "addressCountry": "DE"
+        },
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
@@ -200,6 +209,11 @@ export const generatePageSEO = (pageName) => {
       title: 'Housing Guide for Indians in Frankfurt',
       description: 'Complete guide to finding accommodation in Frankfurt for Indian expats. Tips on renting, areas to live, and housing search.',
       keywords: 'Frankfurt housing Indians, Indian accommodation Frankfurt, expat housing Germany'
+    },
+    blog: {
+      title: 'Blog - Frankfurt Indians',
+      description: 'Read the latest articles, stories, and insights from the Indian community in Frankfurt. Culture, lifestyle, career tips, and expat experiences.',
+      keywords: 'Indian blog Frankfurt, Indian expat stories, Frankfurt Indian articles, Indian community blog Germany'
     }
   };
 

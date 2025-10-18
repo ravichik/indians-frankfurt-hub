@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMenu, FiX, FiHome, FiMessageSquare, FiCalendar, FiBook, FiUser, FiLogOut, FiSettings, FiBookOpen } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import Logo, { LogoMinimal } from './Logo';
+import { LogoMinimal } from './Logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,16 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiCalendar, FiUser, FiClock, FiTag, FiSearch,
-  FiTrendingUp, FiBookOpen, FiHeart, FiEye, FiPlus
+  FiCalendar, FiUser, FiClock, FiSearch,
+  FiTrendingUp, FiBookOpen, FiHeart, FiEye, FiPlus, FiMail, FiCheck
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
-import { blogAPI } from '../services/api';
+import { blogAPI, subscriptionAPI } from '../services/api';
 import { formatDistanceToNow } from 'date-fns';
 import EnhancedSEO from '../components/EnhancedSEO';
 import { generatePageSEO } from '../utils/seoUtils';
 import toast from 'react-hot-toast';
+
+const SubscribeSection = () => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await subscriptionAPI.subscribe({ 
+        email, 
+        type: 'blog' 
+      });
+      
+      if (response.data.success) {
+        setSubscribed(true);
+        setEmail('');
+        toast.success(response.data.message || 'Successfully subscribed!');
+      } else {
+        toast.error(response.data.message || 'Failed to subscribe');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to subscribe. Please try again.';
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (subscribed) {
+    return (
+      <div className="bg-green-50 rounded-lg p-6 text-center">
+        <FiCheck className="w-12 h-12 text-green-500 mx-auto mb-3" />
+        <h3 className="font-bold text-gray-900 mb-2">Thank You!</h3>
+        <p className="text-sm text-gray-600">
+          You're now subscribed to our blog newsletter.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-primary-50 rounded-lg p-6">
+      <h3 className="font-bold text-gray-900 mb-2 flex items-center">
+        <FiMail className="mr-2" />
+        Stay Updated
+      </h3>
+      <p className="text-sm text-gray-600 mb-4">
+        Get the latest articles delivered to your inbox
+      </p>
+      <form onSubmit={handleSubscribe}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your email"
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-3"
+          disabled={loading}
+        />
+        <button 
+          type="submit"
+          disabled={loading}
+          className="w-full px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Subscribing...' : 'Subscribe'}
+        </button>
+      </form>
+    </div>
+  );
+};
 
 const BlogPage = () => {
   const navigate = useNavigate();
@@ -224,20 +308,7 @@ const BlogPage = () => {
                 </div>
 
                 {/* Newsletter */}
-                <div className="bg-primary-50 rounded-lg p-6">
-                  <h3 className="font-bold text-gray-900 mb-2">Stay Updated</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Get the latest articles delivered to your inbox
-                  </p>
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent mb-3"
-                  />
-                  <button className="w-full px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                    Subscribe
-                  </button>
-                </div>
+                <SubscribeSection />
               </div>
             </aside>
 

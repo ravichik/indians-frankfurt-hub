@@ -113,4 +113,11 @@ export const blogAPI = {
   getAdminPosts: () => api.get('/blog/admin/posts')
 };
 
+export const subscriptionAPI = {
+  subscribe: (data) => api.post('/subscription/subscribe', data),
+  unsubscribe: (data) => api.post('/subscription/unsubscribe', data),
+  getStatus: (email) => api.get(`/subscription/status/${email}`),
+  updatePreferences: (data) => api.put('/subscription/preferences', data)
+};
+
 export default api;

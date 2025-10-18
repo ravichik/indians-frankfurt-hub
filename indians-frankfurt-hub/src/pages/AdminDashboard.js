@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiUsers, FiFileText, FiCalendar, FiShield, FiAlertTriangle,
-  FiTrendingUp, FiSettings, FiBarChart2, FiActivity, FiLock,
-  FiUnlock, FiTrash2, FiEdit2, FiEye, FiCheck, FiX,
-  FiRefreshCw, FiUserCheck, FiUserX, FiMessageSquare,
-  FiClock, FiFilter, FiSearch, FiDownload, FiMail, FiChevronUp, FiChevronDown
+  FiUsers, FiFileText, FiCalendar, FiAlertTriangle,
+  FiTrendingUp, FiSettings, FiBarChart2, FiLock,
+  FiUnlock, FiTrash2, FiEye, FiCheck, FiX,
+  FiRefreshCw, FiMessageSquare, FiSearch, FiDownload, FiChevronUp, FiChevronDown
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI } from '../services/api';
-import { format, formatDistanceToNow, startOfWeek, startOfMonth } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import {

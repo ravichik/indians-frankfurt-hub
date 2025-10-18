@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   FiUsers, FiFileText, FiCalendar, FiShield, FiAlertTriangle,
   FiTrendingUp, FiSettings, FiBarChart2, FiActivity, FiLock,
   FiUnlock, FiTrash2, FiEdit2, FiEye, FiCheck, FiX,
   FiRefreshCw, FiUserCheck, FiUserX, FiMessageSquare,
-  FiClock, FiFilter, FiSearch, FiDownload, FiMail
+  FiClock, FiFilter, FiSearch, FiDownload, FiMail, FiChevronUp, FiChevronDown
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { adminAPI } from '../services/api';
@@ -45,6 +45,8 @@ const AdminDashboard = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [userFilter, setUserFilter] = useState('all');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortDirection, setSortDirection] = useState('desc');
 
   // Content Moderation State
   const [flaggedPosts, setFlaggedPosts] = useState([]);
@@ -183,18 +185,49 @@ const AdminDashboard = () => {
     }
   };
 
-  // Filter users based on search and filter
-  const filteredUsers = users.filter(user => {
+  // Handle sorting
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Filter and sort users
+  const filteredAndSortedUsers = users.filter(user => {
     const matchesSearch = user.username?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
                          user.email?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
                          user.fullName?.toLowerCase().includes(userSearchTerm.toLowerCase());
-    
+
     const matchesFilter = userFilter === 'all' ||
                          (userFilter === 'admin' && user.role === 'admin') ||
                          (userFilter === 'moderator' && user.role === 'moderator') ||
                          (userFilter === 'banned' && user.isBanned);
-    
+
     return matchesSearch && matchesFilter;
+  }).sort((a, b) => {
+    let aValue = a[sortField];
+    let bValue = b[sortField];
+
+    // Handle different field types
+    if (sortField === 'createdAt' || sortField === 'lastActive') {
+      aValue = new Date(aValue || 0);
+      bValue = new Date(bValue || 0);
+    } else if (sortField === 'fullName' || sortField === 'username' || sortField === 'email' || sortField === 'role') {
+      aValue = (aValue || '').toLowerCase();
+      bValue = (bValue || '').toLowerCase();
+    } else if (sortField === 'posts') {
+      aValue = aValue || 0;
+      bValue = bValue || 0;
+    }
+
+    if (sortDirection === 'asc') {
+      return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+    } else {
+      return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+    }
   });
 
   const tabs = [
@@ -464,20 +497,60 @@ const AdminDashboard = () => {
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          User
+                        <th
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                          onClick={() => handleSort('fullName')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>User</span>
+                            {sortField === 'fullName' && (
+                              sortDirection === 'asc' ?
+                                <FiChevronUp className="w-4 h-4" /> :
+                                <FiChevronDown className="w-4 h-4" />
+                            )}
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Role
+                        <th
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                          onClick={() => handleSort('role')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Role</span>
+                            {sortField === 'role' && (
+                              sortDirection === 'asc' ?
+                                <FiChevronUp className="w-4 h-4" /> :
+                                <FiChevronDown className="w-4 h-4" />
+                            )}
+                          </div>
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Joined
+                        <th
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                          onClick={() => handleSort('createdAt')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Joined</span>
+                            {sortField === 'createdAt' && (
+                              sortDirection === 'asc' ?
+                                <FiChevronUp className="w-4 h-4" /> :
+                                <FiChevronDown className="w-4 h-4" />
+                            )}
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Activity
+                        <th
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                          onClick={() => handleSort('posts')}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Activity</span>
+                            {sortField === 'posts' && (
+                              sortDirection === 'asc' ?
+                                <FiChevronUp className="w-4 h-4" /> :
+                                <FiChevronDown className="w-4 h-4" />
+                            )}
+                          </div>
                         </th>
                         <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Actions
@@ -485,7 +558,7 @@ const AdminDashboard = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {filteredUsers.map((user) => (
+                      {filteredAndSortedUsers.map((user) => (
                         <tr key={user._id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
@@ -523,7 +596,14 @@ const AdminDashboard = () => {
                             )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {user.createdAt && format(new Date(user.createdAt), 'MMM d, yyyy')}
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'N/A'}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {user.createdAt ? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }) : ''}
+                              </span>
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">{user.posts || 0} posts</div>

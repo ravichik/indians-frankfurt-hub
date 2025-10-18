@@ -97,7 +97,8 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await adminAPI.getUsers();
+      // Fetch all users by setting a high limit to get all users
+      const response = await adminAPI.getUsers({ limit: 1000 });
       setUsers(response.data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);

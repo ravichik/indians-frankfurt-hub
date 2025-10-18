@@ -59,6 +59,16 @@ const AdminDashboard = () => {
     userEngagement: []
   });
 
+  // Settings State
+  const [settings, setSettings] = useState({
+    siteName: 'Frankfurt Indians',
+    contactEmail: 'admin@indiansfrankfurt.com',
+    registration: 'open',
+    autoModerate: true,
+    emailVerification: true,
+    spamProtection: true
+  });
+
   // Check if user is admin
   useEffect(() => {
     if (!user || user.role !== 'admin') {
@@ -76,7 +86,8 @@ const AdminDashboard = () => {
         fetchStats(),
         fetchUsers(),
         fetchFlaggedContent(),
-        fetchAnalytics()
+        fetchAnalytics(),
+        fetchSettings()
       ]);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -121,6 +132,25 @@ const AdminDashboard = () => {
       setAnalyticsData(response.data);
     } catch (error) {
       console.error('Error fetching analytics:', error);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await adminAPI.getSettings();
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
+  const saveSettings = async () => {
+    try {
+      await adminAPI.updateSettings(settings);
+      toast.success('Settings saved successfully');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings');
     }
   };
 
@@ -1017,7 +1047,8 @@ const AdminDashboard = () => {
                       </label>
                       <input
                         type="text"
-                        defaultValue="Frankfurt Indians"
+                        value={settings.siteName}
+                        onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
@@ -1027,7 +1058,8 @@ const AdminDashboard = () => {
                       </label>
                       <input
                         type="email"
-                        defaultValue="admin@indiansfrankfurt.com"
+                        value={settings.contactEmail}
+                        onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
@@ -1035,7 +1067,11 @@ const AdminDashboard = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Registration
                       </label>
-                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                      <select
+                        value={settings.registration}
+                        onChange={(e) => setSettings({ ...settings, registration: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      >
                         <option value="open">Open Registration</option>
                         <option value="approval">Requires Approval</option>
                         <option value="closed">Closed</option>
@@ -1054,7 +1090,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">Automatically flag inappropriate content</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.autoModerate}
+                          onChange={(e) => setSettings({ ...settings, autoModerate: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1064,7 +1105,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">New users must verify email</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.emailVerification}
+                          onChange={(e) => setSettings({ ...settings, emailVerification: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1074,7 +1120,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">Enable anti-spam measures</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.spamProtection}
+                          onChange={(e) => setSettings({ ...settings, spamProtection: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1083,7 +1134,10 @@ const AdminDashboard = () => {
 
                 {/* Save Button */}
                 <div className="flex justify-end">
-                  <button className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                  <button
+                    onClick={saveSettings}
+                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  >
                     Save Settings
                   </button>
                 </div>

@@ -993,35 +993,42 @@ const AdminDashboard = () => {
 
                 {/* Engagement Metrics */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Engagement Metrics</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Most Active Users</h3>
                   <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Daily Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">245</span>
+                    {analyticsData.userEngagement && analyticsData.userEngagement.length > 0 ? (
+                      analyticsData.userEngagement.map((user, index) => (
+                        <div key={index}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm text-gray-600">{user.username}</span>
+                            <span className="text-sm font-semibold text-gray-900">{user.posts} posts</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-primary-600 h-2 rounded-full"
+                              style={{ width: `${user.engagement}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        No user engagement data available
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-primary-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+                    )}
+                    {analyticsData.summary && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-600">Avg Posts/User:</span>
+                            <span className="ml-2 font-semibold">{analyticsData.summary.averagePostsPerUser}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Active Categories:</span>
+                            <span className="ml-2 font-semibold">{analyticsData.summary.totalCategories}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Weekly Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">892</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '82%' }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Monthly Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">1,456</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '92%' }}></div>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

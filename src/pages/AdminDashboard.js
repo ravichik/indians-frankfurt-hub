@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [userFilter, setUserFilter] = useState('all');
-  const [sortField, setSortField] = useState('createdAt');
+  const [sortField, setSortField] = useState('joinedDate');
   const [sortDirection, setSortDirection] = useState('desc');
 
   // Content Moderation State
@@ -211,7 +211,7 @@ const AdminDashboard = () => {
     let bValue = b[sortField];
 
     // Handle different field types
-    if (sortField === 'createdAt' || sortField === 'lastActive') {
+    if (sortField === 'joinedDate' || sortField === 'lastActive') {
       aValue = new Date(aValue || 0);
       bValue = new Date(bValue || 0);
     } else if (sortField === 'fullName' || sortField === 'username' || sortField === 'email' || sortField === 'role') {
@@ -406,7 +406,7 @@ const AdminDashboard = () => {
                           </div>
                         </div>
                         <span className="text-xs text-gray-500">
-                          {user.createdAt && formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
+                          {user.joinedDate && formatDistanceToNow(new Date(user.joinedDate), { addSuffix: true })}
                         </span>
                       </div>
                     ))}
@@ -527,11 +527,11 @@ const AdminDashboard = () => {
                         </th>
                         <th
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                          onClick={() => handleSort('createdAt')}
+                          onClick={() => handleSort('joinedDate')}
                         >
                           <div className="flex items-center space-x-1">
                             <span>Joined</span>
-                            {sortField === 'createdAt' && (
+                            {sortField === 'joinedDate' && (
                               sortDirection === 'asc' ?
                                 <FiChevronUp className="w-4 h-4" /> :
                                 <FiChevronDown className="w-4 h-4" />
@@ -597,10 +597,10 @@ const AdminDashboard = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div className="flex flex-col">
                               <span className="font-medium">
-                                {user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'N/A'}
+                                {user.joinedDate ? format(new Date(user.joinedDate), 'MMM d, yyyy') : 'N/A'}
                               </span>
                               <span className="text-xs text-gray-400">
-                                {user.createdAt ? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }) : ''}
+                                {user.joinedDate ? formatDistanceToNow(new Date(user.joinedDate), { addSuffix: true }) : ''}
                               </span>
                             </div>
                           </td>
@@ -744,8 +744,8 @@ const AdminDashboard = () => {
                       <div className="flex justify-between py-2 border-b">
                         <span className="text-gray-600">Account Created</span>
                         <span className="text-gray-900">
-                          {selectedUser.createdAt ? 
-                            format(new Date(selectedUser.createdAt), 'PPpp') : 
+                          {selectedUser.joinedDate ?
+                            format(new Date(selectedUser.joinedDate), 'PPpp') :
                             'N/A'
                           }
                         </span>

@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [userFilter, setUserFilter] = useState('all');
-  const [sortField, setSortField] = useState('createdAt');
+  const [sortField, setSortField] = useState('joinedDate');
   const [sortDirection, setSortDirection] = useState('desc');
 
   // Content Moderation State
@@ -57,6 +57,16 @@ const AdminDashboard = () => {
     postActivity: [],
     topCategories: [],
     userEngagement: []
+  });
+
+  // Settings State
+  const [settings, setSettings] = useState({
+    siteName: 'Frankfurt Indians',
+    contactEmail: 'admin@indiansfrankfurt.com',
+    registration: 'open',
+    autoModerate: true,
+    emailVerification: true,
+    spamProtection: true
   });
 
   // Check if user is admin
@@ -76,7 +86,8 @@ const AdminDashboard = () => {
         fetchStats(),
         fetchUsers(),
         fetchFlaggedContent(),
-        fetchAnalytics()
+        fetchAnalytics(),
+        fetchSettings()
       ]);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -97,7 +108,8 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await adminAPI.getUsers();
+      // Fetch all users by setting a high limit to get all users
+      const response = await adminAPI.getUsers({ limit: 1000 });
       setUsers(response.data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -120,6 +132,25 @@ const AdminDashboard = () => {
       setAnalyticsData(response.data);
     } catch (error) {
       console.error('Error fetching analytics:', error);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const response = await adminAPI.getSettings();
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
+  const saveSettings = async () => {
+    try {
+      await adminAPI.updateSettings(settings);
+      toast.success('Settings saved successfully');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast.error('Failed to save settings');
     }
   };
 
@@ -211,7 +242,7 @@ const AdminDashboard = () => {
     let bValue = b[sortField];
 
     // Handle different field types
-    if (sortField === 'createdAt' || sortField === 'lastActive') {
+    if (sortField === 'joinedDate' || sortField === 'lastActive') {
       aValue = new Date(aValue || 0);
       bValue = new Date(bValue || 0);
     } else if (sortField === 'fullName' || sortField === 'username' || sortField === 'email' || sortField === 'role') {
@@ -406,7 +437,7 @@ const AdminDashboard = () => {
                           </div>
                         </div>
                         <span className="text-xs text-gray-500">
-                          {user.createdAt && formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })}
+                          {user.joinedDate && formatDistanceToNow(new Date(user.joinedDate), { addSuffix: true })}
                         </span>
                       </div>
                     ))}
@@ -527,11 +558,11 @@ const AdminDashboard = () => {
                         </th>
                         <th
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                          onClick={() => handleSort('createdAt')}
+                          onClick={() => handleSort('joinedDate')}
                         >
                           <div className="flex items-center space-x-1">
                             <span>Joined</span>
-                            {sortField === 'createdAt' && (
+                            {sortField === 'joinedDate' && (
                               sortDirection === 'asc' ?
                                 <FiChevronUp className="w-4 h-4" /> :
                                 <FiChevronDown className="w-4 h-4" />
@@ -597,10 +628,10 @@ const AdminDashboard = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div className="flex flex-col">
                               <span className="font-medium">
-                                {user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'N/A'}
+                                {user.joinedDate ? format(new Date(user.joinedDate), 'MMM d, yyyy') : 'N/A'}
                               </span>
                               <span className="text-xs text-gray-400">
-                                {user.createdAt ? formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }) : ''}
+                                {user.joinedDate ? formatDistanceToNow(new Date(user.joinedDate), { addSuffix: true }) : ''}
                               </span>
                             </div>
                           </td>
@@ -744,8 +775,8 @@ const AdminDashboard = () => {
                       <div className="flex justify-between py-2 border-b">
                         <span className="text-gray-600">Account Created</span>
                         <span className="text-gray-900">
-                          {selectedUser.createdAt ? 
-                            format(new Date(selectedUser.createdAt), 'PPpp') : 
+                          {selectedUser.joinedDate ?
+                            format(new Date(selectedUser.joinedDate), 'PPpp') :
                             'N/A'
                           }
                         </span>
@@ -962,35 +993,42 @@ const AdminDashboard = () => {
 
                 {/* Engagement Metrics */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Engagement Metrics</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Most Active Users</h3>
                   <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Daily Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">245</span>
+                    {analyticsData.userEngagement && analyticsData.userEngagement.length > 0 ? (
+                      analyticsData.userEngagement.map((user, index) => (
+                        <div key={index}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm text-gray-600">{user.username}</span>
+                            <span className="text-sm font-semibold text-gray-900">{user.posts} posts</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-primary-600 h-2 rounded-full"
+                              style={{ width: `${user.engagement}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        No user engagement data available
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-primary-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+                    )}
+                    {analyticsData.summary && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-600">Avg Posts/User:</span>
+                            <span className="ml-2 font-semibold">{analyticsData.summary.averagePostsPerUser}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Active Categories:</span>
+                            <span className="ml-2 font-semibold">{analyticsData.summary.totalCategories}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Weekly Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">892</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '82%' }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">Monthly Active Users</span>
-                        <span className="text-sm font-semibold text-gray-900">1,456</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '92%' }}></div>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1016,7 +1054,8 @@ const AdminDashboard = () => {
                       </label>
                       <input
                         type="text"
-                        defaultValue="Frankfurt Indians"
+                        value={settings.siteName}
+                        onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
@@ -1026,7 +1065,8 @@ const AdminDashboard = () => {
                       </label>
                       <input
                         type="email"
-                        defaultValue="admin@indiansfrankfurt.com"
+                        value={settings.contactEmail}
+                        onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
@@ -1034,7 +1074,11 @@ const AdminDashboard = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Registration
                       </label>
-                      <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                      <select
+                        value={settings.registration}
+                        onChange={(e) => setSettings({ ...settings, registration: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      >
                         <option value="open">Open Registration</option>
                         <option value="approval">Requires Approval</option>
                         <option value="closed">Closed</option>
@@ -1053,7 +1097,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">Automatically flag inappropriate content</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.autoModerate}
+                          onChange={(e) => setSettings({ ...settings, autoModerate: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1063,7 +1112,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">New users must verify email</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.emailVerification}
+                          onChange={(e) => setSettings({ ...settings, emailVerification: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1073,7 +1127,12 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">Enable anti-spam measures</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" defaultChecked className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          checked={settings.spamProtection}
+                          onChange={(e) => setSettings({ ...settings, spamProtection: e.target.checked })}
+                          className="sr-only peer"
+                        />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                       </label>
                     </div>
@@ -1082,7 +1141,10 @@ const AdminDashboard = () => {
 
                 {/* Save Button */}
                 <div className="flex justify-end">
-                  <button className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                  <button
+                    onClick={saveSettings}
+                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  >
                     Save Settings
                   </button>
                 </div>

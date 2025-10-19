@@ -634,7 +634,7 @@ const CreateEventModal = ({ onClose }) => {
               </a>
             )}
           </div>
-          
+
           <div className="flex justify-end space-x-4">
             <button
               type="button"

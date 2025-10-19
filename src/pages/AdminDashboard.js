@@ -341,19 +341,19 @@ const AdminDashboard = () => {
                 <h3 className="text-xl font-semibold mb-4">Website Analytics</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-3xl font-bold">{stats.totalVisits || '12.5K'}</p>
+                    <p className="text-3xl font-bold">{stats.totalVisits || '0'}</p>
                     <p className="text-sm opacity-90">Total Visits</p>
                   </div>
                   <div>
-                    <p className="text-3xl font-bold">{stats.uniqueVisitors || '3.2K'}</p>
+                    <p className="text-3xl font-bold">{stats.uniqueVisitors || '0'}</p>
                     <p className="text-sm opacity-90">Unique Visitors</p>
                   </div>
                   <div>
-                    <p className="text-3xl font-bold">{stats.avgSessionDuration || '4m 32s'}</p>
+                    <p className="text-3xl font-bold">{stats.avgSessionDuration || '0m 0s'}</p>
                     <p className="text-sm opacity-90">Avg. Session</p>
                   </div>
                   <div>
-                    <p className="text-3xl font-bold">{stats.bounceRate || '32%'}</p>
+                    <p className="text-3xl font-bold">{stats.bounceRate || '0%'}</p>
                     <p className="text-sm opacity-90">Bounce Rate</p>
                   </div>
                 </div>

@@ -100,9 +100,40 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const response = await adminAPI.getStats();
-      setStats(response.data);
+      const data = response.data;
+
+      // Ensure all stats have default values to prevent display issues
+      setStats({
+        totalUsers: data.totalUsers || 0,
+        activeUsers: data.activeUsers || 0,
+        totalPosts: data.totalPosts || 0,
+        totalEvents: data.totalEvents || 0,
+        flaggedContent: data.flaggedContent || 0,
+        newUsersToday: data.newUsersToday || 0,
+        postsToday: data.postsToday || 0,
+        pendingReports: data.pendingReports || 0,
+        totalVisits: data.totalVisits || '0',
+        uniqueVisitors: data.uniqueVisitors || '0',
+        avgSessionDuration: data.avgSessionDuration || '0m 0s',
+        bounceRate: data.bounceRate || '0%'
+      });
     } catch (error) {
       console.error('Error fetching stats:', error);
+      // Set default stats in case of error
+      setStats({
+        totalUsers: 0,
+        activeUsers: 0,
+        totalPosts: 0,
+        totalEvents: 0,
+        flaggedContent: 0,
+        newUsersToday: 0,
+        postsToday: 0,
+        pendingReports: 0,
+        totalVisits: '0',
+        uniqueVisitors: '0',
+        avgSessionDuration: '0m 0s',
+        bounceRate: '0%'
+      });
     }
   };
 
@@ -337,84 +368,84 @@ const AdminDashboard = () => {
               transition={{ duration: 0.3 }}
             >
               {/* Website Stats */}
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white mb-6">
-                <h3 className="text-xl font-semibold mb-4">Website Analytics</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-3xl font-bold">{stats.totalVisits || '0'}</p>
-                    <p className="text-sm opacity-90">Total Visits</p>
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 sm:p-6 text-white mb-6">
+                <h3 className="text-lg sm:text-xl font-semibold mb-4">Website Analytics</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="text-center sm:text-left">
+                    <p className="text-2xl sm:text-3xl font-bold break-all">{stats.totalVisits || '0'}</p>
+                    <p className="text-xs sm:text-sm opacity-90 whitespace-nowrap">Total Visits</p>
                   </div>
-                  <div>
-                    <p className="text-3xl font-bold">{stats.uniqueVisitors || '0'}</p>
-                    <p className="text-sm opacity-90">Unique Visitors</p>
+                  <div className="text-center sm:text-left">
+                    <p className="text-2xl sm:text-3xl font-bold break-all">{stats.uniqueVisitors || '0'}</p>
+                    <p className="text-xs sm:text-sm opacity-90 whitespace-nowrap">Unique Visitors</p>
                   </div>
-                  <div>
-                    <p className="text-3xl font-bold">{stats.avgSessionDuration || '0m 0s'}</p>
-                    <p className="text-sm opacity-90">Avg. Session</p>
+                  <div className="text-center sm:text-left">
+                    <p className="text-2xl sm:text-3xl font-bold break-all">{stats.avgSessionDuration || '0m 0s'}</p>
+                    <p className="text-xs sm:text-sm opacity-90 whitespace-nowrap">Avg. Session</p>
                   </div>
-                  <div>
-                    <p className="text-3xl font-bold">{stats.bounceRate || '0%'}</p>
-                    <p className="text-sm opacity-90">Bounce Rate</p>
+                  <div className="text-center sm:text-left">
+                    <p className="text-2xl sm:text-3xl font-bold break-all">{stats.bounceRate || '0%'}</p>
+                    <p className="text-xs sm:text-sm opacity-90 whitespace-nowrap">Bounce Rate</p>
                   </div>
                 </div>
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                  className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <FiUsers className="w-8 h-8 text-primary-600" />
-                    <span className="text-sm text-green-600 font-medium">
-                      +{stats.newUsersToday} today
+                    <FiUsers className="w-6 sm:w-8 h-6 sm:h-8 text-primary-600" />
+                    <span className="text-xs sm:text-sm text-green-600 font-medium">
+                      +{stats.newUsersToday || 0} today
                     </span>
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
-                  <p className="text-sm text-gray-600">Total Users</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">{stats.totalUsers || 0}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Total Users</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                  className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <FiMessageSquare className="w-8 h-8 text-blue-600" />
-                    <span className="text-sm text-green-600 font-medium">
-                      +{stats.postsToday} today
+                    <FiMessageSquare className="w-6 sm:w-8 h-6 sm:h-8 text-blue-600" />
+                    <span className="text-xs sm:text-sm text-green-600 font-medium">
+                      +{stats.postsToday || 0} today
                     </span>
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">{stats.totalPosts}</p>
-                  <p className="text-sm text-gray-600">Forum Posts</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">{stats.totalPosts || 0}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Forum Posts</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                  className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <FiCalendar className="w-8 h-8 text-green-600" />
-                    <span className="text-sm text-gray-600 font-medium">
-                      {stats.activeUsers} active
+                    <FiCalendar className="w-6 sm:w-8 h-6 sm:h-8 text-green-600" />
+                    <span className="text-xs sm:text-sm text-gray-600 font-medium">
+                      {stats.activeUsers || 0} active
                     </span>
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">{stats.totalEvents}</p>
-                  <p className="text-sm text-gray-600">Events Created</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">{stats.totalEvents || 0}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Events Created</p>
                 </motion.div>
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
+                  className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <FiAlertTriangle className="w-8 h-8 text-orange-600" />
-                    <span className="text-sm text-orange-600 font-medium">
-                      {stats.pendingReports} pending
+                    <FiAlertTriangle className="w-6 sm:w-8 h-6 sm:h-8 text-orange-600" />
+                    <span className="text-xs sm:text-sm text-orange-600 font-medium">
+                      {stats.pendingReports || 0} pending
                     </span>
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">{stats.flaggedContent}</p>
-                  <p className="text-sm text-gray-600">Flagged Content</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">{stats.flaggedContent || 0}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Flagged Content</p>
                 </motion.div>
               </div>
 
